@@ -107,9 +107,11 @@ var HighchartGraphBox = React.createClass({
     var that = this;
     this.debounceUpdate = _.debounce(function(data) {
       var datatable = that._updateGraphData(data);
-      that.chart.update({
-        series: datatable.series
-      })
+      /* that.chart.update({
+       *   series: datatable.series
+       * }) */
+      that.chart.destroy();
+      that._makeViz();
     }, 1000);
 
     // Set up graph type updater
@@ -132,7 +134,7 @@ var HighchartGraphBox = React.createClass({
 
       // Update graph data
       if (this.chart && this.debounceUpdate) {
-        this.debounceUpdate(this.props.data);
+        this.debounceUpdate(this.props.unifiedData);
       }
     }
 

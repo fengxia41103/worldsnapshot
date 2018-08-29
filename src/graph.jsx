@@ -29,7 +29,7 @@ var randomId = function() {
 //****************************************
 var GraphFactory = React.createClass({
   getInitialState: function() {
-    var type = (typeof this.props.type === "undefined" || !this.props.type) ? "bar" : this.props.type;
+    var type = (typeof this.props.type === undefined || !this.props.type) ? "bar" : this.props.type;
     return {
       graphType: type,
       graphEngine: "highchart", // possible values: [D3, Google, Highchart, Metrics]
@@ -50,7 +50,7 @@ var GraphFactory = React.createClass({
     var graphType = this.state.graphType;
 
     // Validate data set
-    if (typeof data == "undefined" || data === null || data.length == 0) {
+    if (typeof data == undefined || data === null || data.length == 0) {
       return null;
     }
 
