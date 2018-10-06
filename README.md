@@ -45,6 +45,7 @@ var api = "http://api.worldbank.org/v2/en/countries?format=json&per_page=1000";
 
 ## Development
 
+1. Install `nvm` and node 9.4.
 1. `npm install`: to pull all dependencies
 2. `npm run dev`
 3. browse `localhost:8080`, browser will auto-refresh when webpack detects a change to source files.
@@ -53,5 +54,6 @@ var api = "http://api.worldbank.org/v2/en/countries?format=json&per_page=1000";
 
 1. `npm run build`
 2. goto `/dist`
-3. assuming you have setup your AWS account, `aws s3 sync . s3://snapshots.world/`.
-4. verify on a browser.   
+3. `pip install awscli`
+4. assuming you have setup your AWS account, `aws s3 sync . s3://snapshots.world/`.
+5. verify on a browser.   
