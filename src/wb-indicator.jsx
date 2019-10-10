@@ -1,12 +1,13 @@
 import React from 'react';
 import AjaxContainer from "./ajax.jsx";
 
-var WbIndicators = React.createClass({
-  getInitialState: function() {
+class WbIndicators extends React.createClass{
+  getInitialState() {
     this.api = "http://api.worldbank.org/v2/indicators?format=json&per_page=17000";
     return null;
-  },
-  render: function() {
+  }
+
+  render() {
     var indicators = this.props.indicators;
 
     // Update data
@@ -25,6 +26,6 @@ var WbIndicators = React.createClass({
     // Render
     return null;
   }
-});
+}
 
 module.exports = WbIndicators;

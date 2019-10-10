@@ -67,15 +67,15 @@ var config = {
     new CopyWebpackPlugin([{
       from: "../index.html"
     },
-                           {
-                             from: 'images',
-                             to: "images"
-                           },
-                           {
-                             from: 'downloads',
-                             to: "downloads"
-                           },
-                          ]),
+     {
+       from: 'images',
+       to: "images"
+     },
+     {
+       from: 'downloads',
+       to: "downloads"
+     },
+    ]),
     new webpack.ProvidePlugin({
       d3: 'd3',
       $: 'jquery'
