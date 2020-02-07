@@ -7,6 +7,8 @@
     "build": "./node_modules/.bin/webpack -p"
   },
   "dependencies": {
+    "@material-ui/core": "^4.9.1",
+    "@material-ui/icons": "^4.9.1",
     "@types/d3": "^4.5.0",
     "bootstrap": "^3.3.7",
     "c3": "^0.4.11",
@@ -23,6 +25,7 @@
     "font-awesome": "^4.6.3",
     "highcharts": "^5.0.7",
     "jquery": "^3.1.1",
+    "loadash": "^1.0.0",
     "material-ui": "^0.16.1",
     "materialize": "^1.0.0",
     "materialize-css": "^0.97.7",

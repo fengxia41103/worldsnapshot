@@ -1,50 +1,60 @@
-import React from 'react';
-var _ = require('lodash');
+import React from "react";
+var _ = require("lodash");
 
 //****************************************
 //
 //    Common HTMLGetter  containers
 //
 //****************************************
-var HTMLGetterContainer = React.createClass({
-  getInitialState: function(){
-    return {
-      loading: false
-    }
-  },
-  getData: function(){
-    if (this.state.loading){
+class HTMLGetterContainer extends React.Component {
+  constructor(props) {
+    super(props);
+
+    //state
+    this.state = {
+      loading: false,
+    };
+
+    //binding
+    this.getData = this.getData.bind(this);
+  }
+
+  getData() {
+    if (this.state.loading) {
       return null;
-    }else{
+    } else {
       this.setState({
-        loading: true
+        loading: true,
       });
     }
 
     // Get data
     var api = this.props.apiUrl;
     var handleUpdate = this.props.handleUpdate;
-    console.log("Getting: "+api);
+    console.log("Getting: " + api);
 
     // Work horse
     fetch(api)
-      .then(function(resp){
+      .then(function(resp) {
         return resp.text();
-      }).then(function(body){
-        if ((typeof body != "undefined") && body){
+      })
+      .then(function(body) {
+        if (typeof body != "undefined" && body) {
           handleUpdate(body);
         }
-      }).catch(function(error){
-      });
-  },
-  componentWillMount: function(){
-    this.debounceGetData = _.debounce(function(){
+      })
+      .catch(function(error) {});
+  }
+
+  componentWillMount() {
+    this.debounceGetData = _.debounce(function() {
       this.getData();
     }, 200);
-  },
-  render: function(){
+  }
+
+  render() {
     // Get data
-    if (!this.state.loading && this.debounceGetData){
+    if (!this.state.loading && this.debounceGetData) {
       this.debounceGetData();
     }
     return (
@@ -54,6 +64,6 @@ var HTMLGetterContainer = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = HTMLGetterContainer;
+export default HTMLGetterContainer;

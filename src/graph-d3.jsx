@@ -1,13 +1,13 @@
-import React from 'react';
-import d3plus from 'd3plus';
-import * as ReactBootstrap from 'react-bootstrap';
+import React from "react";
+import d3plus from "d3plus";
+import * as ReactBootstrap from "react-bootstrap";
 
-var _ = require('lodash');
-var classNames = require('classnames');
+var _ = require("lodash");
+var classNames = require("classnames");
 //import WayPoint from 'react-waypoint';
 
-var randomId = function(){
-  return "MY"+(Math.random()*1e32).toString(12);
+var randomId = function() {
+  return "MY" + (Math.random() * 1e32).toString(12);
 };
 
 //****************************************
@@ -16,41 +16,51 @@ var randomId = function(){
 //
 //****************************************
 
-var D3PlusGraphBox = React.createClass({
-  makeViz: function(){
+class D3PlusGraphBox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    //binding
+    this.makeViz = this.makeViz.bind(this);
+    this.updateGraphConfig = this.updateGraphConfig.bind(this);
+  }
+
+  makeViz() {
     var config = {
-      "id": "category",
-      "text": "text",
-      "labels": true,
-      "y": "value",
-      "x": "year",
-      "time": "year",
-      "size": this.props.graphType=="line"?"":"value",
-      "shape": {
+      id: "category",
+      text: "text",
+      labels: true,
+      y: "value",
+      x: "year",
+      time: "year",
+      size: this.props.graphType == "line" ? "" : "value",
+      shape: {
         interpolate: "basis",
-        rendering: "optimizeSpeed"
+        rendering: "optimizeSpeed",
       },
-      "footer": {
+      footer: {
         position: "top",
-        value: this.props.footer
-      }
+        value: this.props.footer,
+      },
     };
 
     // Draw graph
     config = _.merge(config, this._updateGraphConfig(this.props.data));
-    this.viz = d3plus.viz()
-                     .container("#"+this.props.containerId)
-                     .config(config)
-                     .data(this.props.data)
-                     .type(this.props.graphType)
-                     .draw();
-  },
-  _updateGraphConfig: function(data){
-    var tmp = _.countBy(data, function(item){
+    this.viz = d3plus
+      .viz()
+      .container("#" + this.props.containerId)
+      .config(config)
+      .data(this.props.data)
+      .type(this.props.graphType)
+      .draw();
+  }
+
+  _updateGraphConfig(data) {
+    var tmp = _.countBy(data, function(item) {
       return item.category;
     });
     var cat = null;
-    if (_.size(tmp) > 1){
+    if (_.size(tmp) > 1) {
       return {
         color: "category",
         legend: {
@@ -58,23 +68,24 @@ var D3PlusGraphBox = React.createClass({
           filters: true,
           value: true,
           text: "category",
-          title: "category"
-        }
+          title: "category",
+        },
       };
-    }else{
+    } else {
       return {
         color: "uniqueKey",
-        legend: false
+        legend: false,
       };
     }
-  },
-  componentDidMount: function(){
+  }
+
+  componentDidMount() {
     // Initialize graph
     this.makeViz();
 
     // Set up data updater
     var that = this;
-    this.debounceUpdate = _.debounce(function(data){
+    this.debounceUpdate = _.debounce(function(data) {
       var config = that._updateGraphConfig(data);
       that.viz.config(config);
       that.viz.data(data);
@@ -82,39 +93,41 @@ var D3PlusGraphBox = React.createClass({
     }, 1000);
 
     // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(function(type){
+    this.debounceGraphTypeUpdate = _.debounce(function(type) {
       that.viz.type(type);
-      that.viz.size(type=="line"?"":"value");
-      that.viz.shape(type=="line"?"line":"square")
+      that.viz.size(type == "line" ? "" : "value");
+      that.viz.shape(type == "line" ? "line" : "square");
 
       // Update config
       var config = that._updateGraphConfig(that.props.data);
       that.viz.config(config);
       that.viz.draw();
     }, 500);
-  },
-  componentWillUnmount: function(){
+  }
+
+  componentWillUnmount() {
     this.viz = null;
-  },
-  render: function(){
+  }
+
+  render() {
     // If data changed
-    var currentValue = (this.props.data!=null) && this.props.data.length;
-    if (currentValue != null && this.preValue !== currentValue){
+    var currentValue = this.props.data != null && this.props.data.length;
+    if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
       // Update graph data
-      if (this.viz && this.debounceUpdate){
+      if (this.viz && this.debounceUpdate) {
         this.debounceUpdate(this.props.data);
       }
     }
 
     // If type changed
     var currentType = this.props.graphType && this.props.graphType.valueOf();
-    if (currentType != null && this.preType !== currentType){
+    if (currentType != null && this.preType !== currentType) {
       this.preType = currentType;
 
       // Update graph data
-      if (this.viz && this.debounceGraphTypeUpdate){
+      if (this.viz && this.debounceGraphTypeUpdate) {
         this.debounceGraphTypeUpdate(this.props.graphType);
       }
     }
@@ -122,12 +135,12 @@ var D3PlusGraphBox = React.createClass({
     // Render
     return (
       <div>
-        <figure id={this.props.containerId} style={{minHeight:"500px"}}>
+        <figure id={this.props.containerId} style={{minHeight: "500px"}}>
           <figcaption>{this.props.title}</figcaption>
         </figure>
       </div>
     );
   }
-});
+}
 
-module.exports =  D3PlusGraphBox;
+export default D3PlusGraphBox;

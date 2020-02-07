@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-var _ = require('lodash');
-var classNames = require('classnames');
+var _ = require("lodash");
+var classNames = require("classnames");
 //import WayPoint from 'react-waypoint';
 
 var randomId = function() {
@@ -9,72 +9,81 @@ var randomId = function() {
 };
 
 // Load highcharts
-var Highcharts = require('highcharts');
-var addFunnel = require('highcharts/modules/funnel');
+var Highcharts = require("highcharts");
+var addFunnel = require("highcharts/modules/funnel");
 
 //****************************************
 //
 //    Common graph containers
 //
 //****************************************
-var HighchartGraphBox = React.createClass({
-  _makeViz: function() {
+class HighchartGraphBox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    //binding
+    this._makeViz = this._makeViz.bind(this);
+    this._updateGraphData = this._updateGraphData.bind(this);
+    this._mapChartType = this._mapChartType.bind(this);
+  }
+
+  _makeViz() {
     // Reformat query data to datatable consumable forms.
     var data = this._updateGraphData(this.props.unifiedData);
 
     // Chart options
     var options = {
       chart: {
-        type: this._mapChartType(this.props.graphType)
+        type: this._mapChartType(this.props.graphType),
       },
       title: {
-        text: this.props.title
+        text: this.props.title,
       },
       subtitle: {
-        text: this.props.footer
+        text: this.props.footer,
       },
       xAxis: {
         categories: data.categories, // x axis  are Years
-        crosshair: true
+        crosshair: true,
       },
       yAxis: {
         title: {
-          text: 'Value'
-        }
+          text: "Value",
+        },
       },
       tooltip: {
-        headerFormat: '<h5 class="page-header">{point.key}</h5><table class="table table-striped">',
-        pointFormat: '<tr><td><b>{series.name}</b></td>' +
-                     '<td>{point.y:,.2f}</td></tr>',
-        footerFormat: '</table>',
+        headerFormat:
+          '<h5 class="page-header">{point.key}</h5><table class="table table-striped">',
+        pointFormat:
+          "<tr><td><b>{series.name}</b></td>" + "<td>{point.y:,.2f}</td></tr>",
+        footerFormat: "</table>",
         shared: true,
-        useHTML: true
+        useHTML: true,
       },
       plotOptions: {
         column: {
           pointPadding: 0.2,
-          borderWidth: 0
-        }
+          borderWidth: 0,
+        },
       },
-      series: data.series
-    }
+      series: data.series,
+    };
 
     // Render chart
-    this.chart = new Highcharts['Chart'](
-      this.props.containerId,
-      options
-    );
-  },
-  _mapChartType: function(askingType) {
+    this.chart = new Highcharts["Chart"](this.props.containerId, options);
+  }
+
+  _mapChartType(askingType) {
     // Map container box GraphType state values to proper chart types
     switch (askingType) {
-      case 'bar':
-        return 'column';
+      case "bar":
+        return "column";
       default:
         return askingType;
     }
-  },
-  _updateGraphData: function(data) {
+  }
+
+  _updateGraphData(data) {
     // data: is a 2D array, [[1970, val 1, val 2,..], [1971, val3, val 4],...]
     // First transpose this matrix so the now it becomes
     // [[1970, 1971, ...], [val1, val3, ....]]
@@ -83,22 +92,23 @@ var HighchartGraphBox = React.createClass({
     var highchartData = data.categories.map(function(country, index) {
       return {
         name: country,
-        data: transposed[index + 1]
-      }
+        data: transposed[index + 1],
+      };
     });
 
     return {
       categories: transposed[0],
-      series: highchartData
-    }
-  },
-  componentDidMount: function() {
+      series: highchartData,
+    };
+  }
+
+  componentDidMount() {
     // Initialize graph
     // Apply funnel after window is present
     Highcharts.setOptions({
       lang: {
-        thousandsSep: ","
-      }
+        thousandsSep: ",",
+      },
     });
     addFunnel(Highcharts);
     this._makeViz();
@@ -118,17 +128,19 @@ var HighchartGraphBox = React.createClass({
     this.debounceGraphTypeUpdate = _.debounce(function(type) {
       that.chart.update({
         chart: {
-          type: that._mapChartType(type)
-        }
-      })
+          type: that._mapChartType(type),
+        },
+      });
     }, 500);
-  },
-  componentWillUnmount: function() {
+  }
+
+  componentWillUnmount() {
     this.chart.destroy();
-  },
-  render: function() {
+  }
+
+  render() {
     // If data changed
-    var currentValue = (this.props.data != null) && this.props.data.length;
+    var currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -152,16 +164,12 @@ var HighchartGraphBox = React.createClass({
     // Render
     return (
       <div>
-        <figure
-            id={this.props.containerId}
-            style={{minHeight: "500px"}}>
-          <figcaption >
-            {this.props.title}
-          </figcaption>
+        <figure id={this.props.containerId} style={{minHeight: "500px"}}>
+          <figcaption>{this.props.title}</figcaption>
         </figure>
       </div>
     );
   }
-});
+}
 
-module.exports = HighchartGraphBox;
+export default HighchartGraphBox;

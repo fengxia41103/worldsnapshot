@@ -1,6 +1,6 @@
-import React from 'react';
-import d3plus from 'd3plus';
-import * as ReactBootstrap from 'react-bootstrap';
+import React from "react";
+import d3plus from "d3plus";
+import * as ReactBootstrap from "react-bootstrap";
 
 import D3PlusGraphBox from "./graph-d3.jsx";
 import GoogleGraphBox from "./graph-googlechart.jsx";
@@ -12,10 +12,10 @@ import PlotlyGraphBox from "./graph-plotly.jsx";
 import DygraphsGraphBox from "./graph-dygraphs.jsx";
 import C3GraphBox from "./graph-c3.jsx";
 
-import WbIndicatorInfo from "./wb-indicator-info.jsx"
+import WbIndicatorInfo from "./wb-indicator-info.jsx";
 
-var _ = require('lodash');
-var classNames = require('classnames');
+var _ = require("lodash");
+var classNames = require("classnames");
 //import WayPoint from 'react-waypoint';
 
 var randomId = function() {
@@ -27,25 +27,38 @@ var randomId = function() {
 //    Common graph containers
 //
 //****************************************
-var GraphFactory = React.createClass({
-  getInitialState: function() {
-    var type = (typeof this.props.type === undefined || !this.props.type) ? "bar" : this.props.type;
-    return {
+class GraphFactory extends React.Component {
+  constructor(props) {
+    super(props);
+
+    // state
+    var type =
+      typeof this.props.type === undefined || !this.props.type
+        ? "bar"
+        : this.props.type;
+    this.state = {
       graphType: type,
       graphEngine: "highchart", // possible values: [D3, Google, Highchart, Metrics]
-    }
-  },
-  setGraphEngine: function(newEngine) {
+    };
+
+    //binding
+    this.setGraphEngine = this.setGraphEngine.bind(this);
+    this.setGraphType = this.setGraphType.bind(this);
+  }
+
+  setGraphEngine(newEngine) {
     this.setState({
-      graphEngine: newEngine
+      graphEngine: newEngine,
     });
-  },
-  setGraphType: function(newType) {
+  }
+
+  setGraphType(newType) {
     this.setState({
-      graphType: newType
+      graphType: newType,
     });
-  },
-  render: function() {
+  }
+
+  render() {
     var data = this.props.data;
     var graphType = this.state.graphType;
 
@@ -64,7 +77,7 @@ var GraphFactory = React.createClass({
       for (var i = 0; i < data.length; i++) {
         var year = data[i].year;
         if (tmp.hasOwnProperty(year)) {
-          tmp[year].push(data[i])
+          tmp[year].push(data[i]);
         } else {
           tmp[year] = [data[i]];
         }
@@ -77,17 +90,16 @@ var GraphFactory = React.createClass({
         var title = [this.props.title, year].join(" -- ");
 
         graphs.push(
-          <div key={randomId()} style={{display:"inline-block"}}>
-            <h3>
-              {countries}
-            </h3>
+          <div key={randomId()} style={{display: "inline-block"}}>
+            <h3>{countries}</h3>
             <D3PlusGraphBox
-                containerId={containerId}
-                graphType={graphType}
-                {...this.props}
-                data={tmp[year]}
-                title={title}/>
-          </div>
+              containerId={containerId}
+              graphType={graphType}
+              {...this.props}
+              data={tmp[year]}
+              title={title}
+            />
+          </div>,
         );
       }
       return (
@@ -99,53 +111,51 @@ var GraphFactory = React.createClass({
     } else if (graphType == "table") {
       return (
         <div>
-          <h3>
-            {countries}
-          </h3>
+          <h3>{countries}</h3>
 
           <GraphConfigBox
-              graphType={this.state.graphType}
-              setGraphType={this.setGraphType}
-              graphEngine={this.state.graphEngine}
-              setGraphEngine={this.setGraphEngine}
-              {...this.props} />
+            graphType={this.state.graphType}
+            setGraphType={this.setGraphType}
+            graphEngine={this.state.graphEngine}
+            setGraphEngine={this.setGraphEngine}
+            {...this.props}
+          />
 
-        {/* Indicator info */}
-          <WbIndicatorInfo
-              {...this.props}/>
-          
+          {/* Indicator info */}
+          <WbIndicatorInfo {...this.props} />
+
           <GraphDatatable {...this.props} />
           <div className="divider" />
         </div>
       );
-    } else { // Default graphs
+    } else {
+      // Default graphs
       // container id
       var containerId = randomId();
 
       return (
         <div className="row">
-          <h3>
-            {countries}
-          </h3>
+          <h3>{countries}</h3>
 
           {/* Graph configurations */}
           <GraphConfigBox
-              graphType={this.state.graphType}
-              setGraphType={this.setGraphType}
-              graphEngine={this.state.graphEngine}
-              setGraphEngine={this.setGraphEngine}
-              {...this.props} />
+            graphType={this.state.graphType}
+            setGraphType={this.setGraphType}
+            graphEngine={this.state.graphEngine}
+            setGraphEngine={this.setGraphEngine}
+            {...this.props}
+          />
 
           {/* Indicator info */}
-          <WbIndicatorInfo
-              {...this.props}/>
+          <WbIndicatorInfo {...this.props} />
 
           {/* Graphs */}
           <GraphBox
-              containerId={containerId}
-              graphType={this.state.graphType}
-              graphEngine={this.state.graphEngine}
-              {...this.props} />
+            containerId={containerId}
+            graphType={this.state.graphType}
+            graphEngine={this.state.graphEngine}
+            {...this.props}
+          />
 
           <div className="divider" />
         </div>
@@ -155,10 +165,10 @@ var GraphFactory = React.createClass({
     // Default
     return null;
   }
-});
+}
 
-var GraphBox = React.createClass({
-  render: function() {
+class GraphBox extends React.Component {
+  render() {
     var engine = this.props.graphEngine.toLowerCase();
     switch (engine) {
       case "c3":
@@ -213,49 +223,46 @@ var GraphBox = React.createClass({
         );
     }
   }
-});
+}
 
-var GraphConfigBox = React.createClass({
-  render: function() {
+class GraphConfigBox extends React.Component {
+  render() {
     var randomKey = randomId();
     return (
-      <div className="right col l3 m3 s12" style={{zIndex:999}}>
-        <ReactBootstrap.DropdownButton title="config"
-                                       id={randomKey}>
+      <div className="right col l3 m3 s12" style={{zIndex: 999}}>
+        <ReactBootstrap.DropdownButton title="config" id={randomKey}>
           <ReactBootstrap.MenuItem className="row">
             <GraphEngineBox
-                current={this.props.graphEngine}
-                setGraphEngine={this.props.setGraphEngine}
-                {...this.props} />
+              current={this.props.graphEngine}
+              setGraphEngine={this.props.setGraphEngine}
+              {...this.props}
+            />
           </ReactBootstrap.MenuItem>
 
           <ReactBootstrap.MenuItem className="row">
             <GraphTypeBox
-                current={this.props.graphType}
-                setGraphType={this.props.setGraphType}
-                {...this.props} />
+              current={this.props.graphType}
+              setGraphType={this.props.setGraphType}
+              {...this.props}
+            />
           </ReactBootstrap.MenuItem>
         </ReactBootstrap.DropdownButton>
       </div>
     );
   }
-});
+}
 
-var GraphTypeBox = React.createClass({
-  render: function() {
+class GraphTypeBox extends React.Component {
+  render() {
     var current = this.props.current;
     var setGraphType = this.props.setGraphType;
     var types = ["bar", "line", "table"];
-    const options = types.map((t) => {
-      var highlight = classNames(
-        "collection-item", {
-          'teal lighten-2 grey-text text-lighten-4': current == t
-        }
-      );
+    const options = types.map(t => {
+      var highlight = classNames("collection-item", {
+        "teal lighten-2 grey-text text-lighten-4": current == t,
+      });
       return (
-        <li key={t}
-            className={highlight}
-            onClick={setGraphType.bind(null,t)}>
+        <li key={t} className={highlight} onClick={setGraphType.bind(null, t)}>
           {t}
         </li>
       );
@@ -266,14 +273,14 @@ var GraphTypeBox = React.createClass({
         <li className="collection-header">
           <h5>Graph Type</h5>
         </li>
-          {options}
+        {options}
       </div>
     );
   }
-});
+}
 
-var GraphEngineBox = React.createClass({
-  render: function() {
+class GraphEngineBox extends React.Component {
+  render() {
     var current = this.props.current.toLowerCase();
     var setGraphEngine = this.props.setGraphEngine;
     var types = [
@@ -284,17 +291,18 @@ var GraphEngineBox = React.createClass({
       "metrics",
       "chartJS",
       "plotly",
-      "dygraphs"];
-    const options = types.map((t) => {
-      var highlight = classNames(
-        "collection-item", {
-          'teal lighten-2 grey-text text-lighten-4': current == t
-        }
-      );
+      "dygraphs",
+    ];
+    const options = types.map(t => {
+      var highlight = classNames("collection-item", {
+        "teal lighten-2 grey-text text-lighten-4": current == t,
+      });
       return (
-        <li key={t}
-            className={highlight}
-            onClick={setGraphEngine.bind(null,t)}>
+        <li
+          key={t}
+          className={highlight}
+          onClick={setGraphEngine.bind(null, t)}
+        >
           {t}
         </li>
       );
@@ -305,10 +313,10 @@ var GraphEngineBox = React.createClass({
         <li className="collection-header">
           <h5>Engine</h5>
         </li>
-          {options}
+        {options}
       </div>
     );
   }
-});
+}
 
-module.exports = GraphFactory;
+export default GraphFactory;

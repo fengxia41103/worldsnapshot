@@ -1,15 +1,15 @@
-import React from 'react';
-import Chart from 'chart.js';
+import React from "react";
+import Chart from "chart.js";
 
-var _ = require('lodash');
-var classNames = require('classnames');
+var _ = require("lodash");
+var classNames = require("classnames");
 
 var randomId = function() {
   return "MY" + (Math.random() * 1e32).toString(12);
 };
 
-var randomColorGenerator = function () { 
-    return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
+var randomColorGenerator = function() {
+  return "#" + (Math.random().toString(16) + "0000000").slice(2, 8);
 };
 
 //****************************************
@@ -17,10 +17,18 @@ var randomColorGenerator = function () {
 //    Common graph containers
 //
 //****************************************
-var ChartJSGraphBox = React.createClass({
-  _makeViz: function() {
+class ChartJSGraphBox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    //binding
+    this._makeViz = this._makeViz.bind(this);
+    this._updateGraphData = this._updateGraphData.bind(this);
+  }
+
+  _makeViz() {
     // Destroy old one if exists
-    if (this.chart != "undefined" && this.chart != null){
+    if (this.chart != "undefined" && this.chart != null) {
       this.chart.destroy();
     }
 
@@ -28,22 +36,24 @@ var ChartJSGraphBox = React.createClass({
     var data = this._updateGraphData(this.props.unifiedData);
 
     // Chart options
-    var options ={
+    var options = {
       scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero:true
-          }
-        }]
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
       },
       responsive: true,
-      title:{
-        display: true
+      title: {
+        display: true,
       },
-      animation:{
-        animateScale:true
-      }
-    }
+      animation: {
+        animateScale: true,
+      },
+    };
 
     // Render chart
     var id = this.props.containerId;
@@ -51,13 +61,13 @@ var ChartJSGraphBox = React.createClass({
       type: this.props.graphType,
       data: {
         labels: data.categories,
-        datasets: data.series
+        datasets: data.series,
       },
-      options: options
+      options: options,
     });
-    
-  },
-  _updateGraphData: function(data) {
+  }
+
+  _updateGraphData(data) {
     // data: is a 2D array, [[1970, val 1, val 2,..], [1971, val3, val 4],...]
     // First transpose this matrix so the now it becomes
     // [[1970, 1971, ...], [val1, val3, ....]]
@@ -70,19 +80,20 @@ var ChartJSGraphBox = React.createClass({
         fill: false,
         strokeColor: randomColorGenerator(),
         pointColor: randomColorGenerator(),
-        backgroundColor: randomColorGenerator(),        
+        backgroundColor: randomColorGenerator(),
         pointStrokeColor: "#fff",
         pointHighlightFill: "#fff",
         pointHighlightStroke: "rgba(220,220,220,1)",
-      }
+      };
     });
 
     return {
       categories: transposed[0],
-      series: formattedData
-    }
-  },
-  componentDidMount: function() {
+      series: formattedData,
+    };
+  }
+
+  componentDidMount() {
     // Initialize graph
     this._makeViz();
 
@@ -97,13 +108,15 @@ var ChartJSGraphBox = React.createClass({
     this.debounceGraphTypeUpdate = _.debounce(function(type) {
       that._makeViz();
     }, 500);
-  },
-  componentWillUnmount: function() {
+  }
+
+  componentWillUnmount() {
     this.chart.destroy();
-  },
-  render: function() {
+  }
+
+  render() {
     // If data changed
-    var currentValue = (this.props.data != null) && this.props.data.length;
+    var currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -128,17 +141,15 @@ var ChartJSGraphBox = React.createClass({
     return (
       <div>
         <figure>
-          <figcaption >
-            {this.props.title}
-          </figcaption>
+          <figcaption>{this.props.title}</figcaption>
           <canvas
             id={this.props.containerId}
-              style={{minHeight: "500px"}}>
-          </canvas>
+            style={{minHeight: "500px"}}
+          ></canvas>
         </figure>
       </div>
     );
   }
-});
+}
 
-module.exports = ChartJSGraphBox;
+export default ChartJSGraphBox;

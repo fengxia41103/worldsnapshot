@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
-var _ = require('lodash');
-var classNames = require('classnames');
+var _ = require("lodash");
+var classNames = require("classnames");
 //import WayPoint from 'react-waypoint';
 
 var randomId = function() {
@@ -14,29 +14,17 @@ var randomId = function() {
 //
 //****************************************
 
-var GraphDatatable = React.createClass({
-  render: function() {
-    const headers = this.props.unifiedData.categories.map((h) => {
-      return (
-        <th key={randomId()}>
-          {h}
-        </th>
-      )
+class GraphDatatable extends React.Component {
+  render() {
+    const headers = this.props.unifiedData.categories.map(h => {
+      return <th key={randomId()}>{h}</th>;
     });
-    const fields = this.props.unifiedData.datatable.map((rows) => {
+    const fields = this.props.unifiedData.datatable.map(rows => {
       var randomKey = randomId();
-      const values = rows.map( (val) => {
-        return (
-          <td key={randomId()}>
-            {val}
-          </td>
-        );
+      const values = rows.map(val => {
+        return <td key={randomId()}>{val}</td>;
       });
-      return (
-        <tr key={randomKey}>
-          {values}
-        </tr>
-      );
+      return <tr key={randomKey}>{values}</tr>;
     });
 
     return (
@@ -48,14 +36,12 @@ var GraphDatatable = React.createClass({
               <th>Year</th>
               {headers}
             </thead>
-            <tbody>
-              {fields}
-            </tbody>
+            <tbody>{fields}</tbody>
           </table>
         </figure>
       </div>
     );
   }
-});
+}
 
-module.exports = GraphDatatable;
+export default GraphDatatable;

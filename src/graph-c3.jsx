@@ -1,9 +1,8 @@
-import React from 'react';
+import React from "react";
 import c3 from "c3";
 
-var _ = require('lodash');
-var classNames = require('classnames');
-//import WayPoint from 'react-waypoint';
+var _ = require("lodash");
+var classNames = require("classnames");
 
 var randomId = function() {
   return "MY" + (Math.random() * 1e32).toString(12);
@@ -14,8 +13,18 @@ var randomId = function() {
 //    Common graph containers
 //
 //****************************************
-var C3GraphBox = React.createClass({
-  _makeViz: function() {
+class C3GraphBox extends React.Component {
+  constructor(props) {
+    super(props);
+
+    //binding
+    this._makeViz = this._makeViz.bind(this);
+    this._destroyViz = this._destroyViz.bind(this);
+    this._updateGraphData = this._updateGraphData.bind(this);
+    this._mapChartType = this._mapChartType.bind(this);
+  }
+
+  _makeViz() {
     // Create a clean sheet
     this._destroyViz();
 
@@ -24,27 +33,29 @@ var C3GraphBox = React.createClass({
 
     // Chart options
     var options = {
-      bindto: "#"+this.props.containerId,
+      bindto: "#" + this.props.containerId,
       data: {
         x: "x", // hard-coded x-axis indicator
         type: this._mapChartType(this.props.graphType),
-        columns: data.series
-      }
-    }
+        columns: data.series,
+      },
+    };
 
     // Render chart
     this.chart = c3.generate(options);
-  },
-  _mapChartType: function(askingType) {
+  }
+
+  _mapChartType(askingType) {
     // Map container box GraphType state values to proper chart types
     switch (askingType) {
-      case 'line':
-        return 'spline';
+      case "line":
+        return "spline";
       default:
         return askingType;
     }
-  },
-  _updateGraphData: function(data) {
+  }
+
+  _updateGraphData(data) {
     // data: is a 2D array, [[1970, val 1, val 2,..], [1971, val3, val 4],...]
     // First transpose this matrix so the now it becomes
     // [[1970, 1971, ...], [val1, val3, ....]]
@@ -64,10 +75,11 @@ var C3GraphBox = React.createClass({
 
     return {
       categories: data.categories,
-      series: formattedData
-    }
-  },
-  componentDidMount: function() {
+      series: formattedData,
+    };
+  }
+
+  componentDidMount() {
     this._makeViz();
 
     // Set up data updater
@@ -80,18 +92,21 @@ var C3GraphBox = React.createClass({
     this.debounceGraphTypeUpdate = _.debounce(function(type) {
       this._makeViz();
     }, 500);
-  },
-  _destroyViz: function(){
-    if (this.chart != "undefined" && this.chart != null){
+  }
+
+  _destroyViz() {
+    if (this.chart != "undefined" && this.chart != null) {
       this.chart.destroy();
     }
-  },
-  componentWillUnmount: function() {
+  }
+
+  componentWillUnmount() {
     this._destroyViz();
-  },
-  render: function() {
+  }
+
+  render() {
     // If data changed
-    var currentValue = (this.props.data != null) && this.props.data.length;
+    var currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -115,16 +130,12 @@ var C3GraphBox = React.createClass({
     // Render
     return (
       <div>
-        <figure
-            id={this.props.containerId}
-            style={{minHeight: "500px"}}>
-          <figcaption >
-            {this.props.title}
-          </figcaption>
+        <figure id={this.props.containerId} style={{minHeight: "500px"}}>
+          <figcaption>{this.props.title}</figcaption>
         </figure>
       </div>
     );
   }
-});
+}
 
-module.exports = C3GraphBox;
+export default C3GraphBox;

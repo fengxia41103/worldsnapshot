@@ -1,49 +1,53 @@
-import React from 'react';
+import React from "react";
 import ProgressBox from "./progress.jsx";
-
-var _ = require('lodash');
+import _ from "lodash";
 
 //****************************************
 //
 //    Common AJAX containers
 //
 //****************************************
-var AjaxContainer = React.createClass({
-  getInitialState: function() {
-    return {
-      loading: false
-    }
-  },
-  getData: function() {
+class AjaxContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+    };
+  }
+  getData() {
     if (this.state.loading) {
       return null;
     } else {
       this.setState({
-        loading: true
+        loading: true,
       });
     }
 
     // Get data
-    var api = this.props.apiUrl;
-    var handleUpdate = this.props.handleUpdate;
+    const api = this.props.apiUrl;
+    const handleUpdate = this.props.handleUpdate;
     console.log("Getting: " + api);
 
     // Work horse
     fetch(api)
-      .then(function(resp) {
+      .then(resp => {
         return resp.json();
-      }).then(function(json) {
-        if ((typeof json != "undefined") && json) {
+      })
+      .then(json => {
+        if (typeof json != "undefined" && json) {
           handleUpdate(json);
         }
-      }).catch(function(error) {});
-  },
-  componentWillMount: function() {
-    this.debounceGetData = _.debounce(function() {
+      })
+      .catch(function(error) {});
+  }
+
+  componentWillMount() {
+    this.debounceGetData = _.debounce(() => {
       this.getData();
     }, 200);
-  },
-  render: function() {
+  }
+
+  render() {
     // Get data
     if (!this.state.loading && this.debounceGetData) {
       this.debounceGetData();
@@ -53,6 +57,6 @@ var AjaxContainer = React.createClass({
       <ProgressBox />
     );
   }
-});
+}
 
-module.exports = AjaxContainer;
+export default AjaxContainer;

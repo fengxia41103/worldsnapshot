@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
-var ProgressBox = React.createClass({
-  render: function(){
+class ProgressBox extends React.Component {
+  render() {
     return (
       <div className="progress">
         <div className="indeterminate"></div>
       </div>
     );
   }
-});
+}
 
-module.exports = ProgressBox;
+export default ProgressBox;

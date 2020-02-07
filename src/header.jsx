@@ -3,9 +3,8 @@ import React from "react";
 
 require("./stylesheets/header.sass");
 
-
-var Header = React.createClass({
-  render () {
+class Header extends React.Component {
+  render() {
     return (
       <div className="myheader">
         <div className="container">
@@ -15,6 +14,6 @@ var Header = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = Header;
+export default Header;
