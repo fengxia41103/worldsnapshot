@@ -1,6 +1,6 @@
 import React from "react";
 import d3plus from "d3plus";
-import * as ReactBootstrap from "react-bootstrap";
+import {DropdownButton, MenuItem} from "react-bootstrap";
 import _ from "lodash";
 import classNames from "classnames";
 import {randomId} from "./helper.jsx";
@@ -26,10 +26,8 @@ class GraphFactory extends React.Component {
     super(props);
 
     // state
-    const type =
-      typeof this.props.type === undefined || !this.props.type
-        ? "bar"
-        : this.props.type;
+    const type = !!this.props.type ? "bar" : this.props.type;
+
     this.state = {
       graphType: type,
       graphEngine: "highchart", // possible values: [D3, Google, Highchart, Metrics]
@@ -53,117 +51,116 @@ class GraphFactory extends React.Component {
   }
 
   render() {
-    const data = this.props.data;
-    const graphType = this.state.graphType;
+    const {data} = this.props;
+    const {graphType} = this.state;
 
     // Validate data set
-    if (typeof data == undefined || data === null || data.length == 0) {
-      return null;
-    }
+    if (!Boolean(data)) return null;
 
     // Country code is an array
     const countries = this.props.countryCode.join("/");
 
     // Render graph by chart type
-    if (graphType == "pie") {
-      // Regroup by year
-      const tmp = {};
-      for (let i = 0; i < data.length; i++) {
-        const year = data[i].year;
-        if (tmp.hasOwnProperty(year)) {
-          tmp[year].push(data[i]);
-        } else {
-          tmp[year] = [data[i]];
+    switch (graphType) {
+      case "pie":
+        // Regroup by year
+        const tmp = {};
+        for (let i = 0; i < data.length; i++) {
+          const year = data[i].year;
+          if (tmp.hasOwnProperty(year)) {
+            tmp[year].push(data[i]);
+          } else {
+            tmp[year] = [data[i]];
+          }
         }
-      }
 
-      // One pie chart per year's data
-      const graphs = [];
-      for (year in tmp) {
-        const containerId = randomId();
-        const title = [this.props.title, year].join(" -- ");
+        // One pie chart per year's data
+        const graphs = [];
+        for (year in tmp) {
+          const containerId = randomId();
+          const title = [this.props.title, year].join(" -- ");
 
-        graphs.push(
-          <div key={randomId()} style={{display: "inline-block"}}>
-            <h3>{countries}</h3>
-            <D3PlusGraphBox
-              containerId={containerId}
-              graphType={graphType}
-              {...this.props}
-              data={tmp[year]}
-              title={title}
-            />
-          </div>,
+          graphs.push(
+            <div key={randomId()} style={{display: "inline-block"}}>
+              <h3>{countries}</h3>
+              <D3PlusGraphBox
+                containerId={containerId}
+                graphType={graphType}
+                {...this.props}
+                data={tmp[year]}
+                title={title}
+              />
+            </div>,
+          );
+        }
+        return (
+          <div className="my-multicol-2">
+            {graphs}
+            <div className="divider" />
+          </div>
         );
-      }
-      return (
-        <div className="my-multicol-2">
-          {graphs}
-          <div className="divider" />
-        </div>
-      );
-    } else if (graphType == "table") {
-      return (
-        <div>
-          <h3>{countries}</h3>
 
-          <GraphConfigBox
-            graphType={this.state.graphType}
-            setGraphType={this.setGraphType}
-            graphEngine={this.state.graphEngine}
-            setGraphEngine={this.setGraphEngine}
-            {...this.props}
-          />
+      case "table":
+        return (
+          <div>
+            <h3>{countries}</h3>
 
-          {/* Indicator info */}
-          <WbIndicatorInfo {...this.props} />
+            <GraphConfigBox
+              graphType={this.state.graphType}
+              setGraphType={this.setGraphType}
+              graphEngine={this.state.graphEngine}
+              setGraphEngine={this.setGraphEngine}
+              {...this.props}
+            />
 
-          <GraphDatatable {...this.props} />
-          <div className="divider" />
-        </div>
-      );
-    } else {
-      // Default graphs
-      // container id
-      const containerId = randomId();
+            {/* Indicator info */}
+            <WbIndicatorInfo {...this.props} />
 
-      return (
-        <div className="row">
-          <h3>{countries}</h3>
+            <GraphDatatable {...this.props} />
+            <div className="divider" />
+          </div>
+        );
 
-          {/* Graph configurations */}
-          <GraphConfigBox
-            graphType={this.state.graphType}
-            setGraphType={this.setGraphType}
-            graphEngine={this.state.graphEngine}
-            setGraphEngine={this.setGraphEngine}
-            {...this.props}
-          />
+      default:
+        // Default graphs
+        // container id
+        const containerId = randomId();
 
-          {/* Indicator info */}
-          <WbIndicatorInfo {...this.props} />
+        return (
+          <div className="row">
+            <h3>{countries}</h3>
 
-          {/* Graphs */}
-          <GraphBox
-            containerId={containerId}
-            graphType={this.state.graphType}
-            graphEngine={this.state.graphEngine}
-            {...this.props}
-          />
+            {/* Graph configurations */}
+            <GraphConfigBox
+              graphType={this.state.graphType}
+              setGraphType={this.setGraphType}
+              graphEngine={this.state.graphEngine}
+              setGraphEngine={this.setGraphEngine}
+              {...this.props}
+            />
 
-          <div className="divider" />
-        </div>
-      );
-    }
+            {/* Indicator info */}
+            <WbIndicatorInfo {...this.props} />
 
-    // Default
-    return null;
+            {/* Graphs */}
+            <GraphBox
+              containerId={containerId}
+              graphType={this.state.graphType}
+              graphEngine={this.state.graphEngine}
+              {...this.props}
+            />
+
+            <div className="divider" />
+          </div>
+        );
+    } // end of switch
   }
 }
 
 class GraphBox extends React.Component {
   render() {
     const engine = this.props.graphEngine.toLowerCase();
+
     switch (engine) {
       case "c3":
         return (
@@ -224,23 +221,23 @@ class GraphConfigBox extends React.Component {
     const randomKey = randomId();
     return (
       <div className="right col l3 m3 s12" style={{zIndex: 999}}>
-        <ReactBootstrap.DropdownButton title="config" id={randomKey}>
-          <ReactBootstrap.MenuItem className="row">
+        <DropdownButton title="config" id={randomKey}>
+          <MenuItem className="row">
             <GraphEngineBox
               current={this.props.graphEngine}
               setGraphEngine={this.props.setGraphEngine}
               {...this.props}
             />
-          </ReactBootstrap.MenuItem>
+          </MenuItem>
 
-          <ReactBootstrap.MenuItem className="row">
+          <MenuItem className="row">
             <GraphTypeBox
               current={this.props.graphType}
               setGraphType={this.props.setGraphType}
               {...this.props}
             />
-          </ReactBootstrap.MenuItem>
-        </ReactBootstrap.DropdownButton>
+          </MenuItem>
+        </DropdownButton>
       </div>
     );
   }

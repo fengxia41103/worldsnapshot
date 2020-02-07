@@ -13,12 +13,12 @@ class DhsGraphContainer extends React.Component {
     };
 
     // binding
-    this.getUrl = this.getUrl.bind(this);
-    this.cleanData = this.cleanData.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
+    this._getUrl = this._getUrl.bind(this);
+    this._cleanData = this._cleanData.bind(this);
+    this._handleUpdate = this._handleUpdate.bind(this);
   }
 
-  getUrl(countryCode, indicators) {
+  _getUrl(countryCode, indicators) {
     // Build DHS API url
     //const baseUrl = "http://api.dhsprogram.com/rest/dhs/v4/data?";
 
@@ -48,7 +48,7 @@ class DhsGraphContainer extends React.Component {
     return baseUrl + tmp.join("&");
   }
 
-  cleanData(data) {
+  _cleanData(data) {
     if (typeof data === "undefined" || data === null) {
       return [];
     } else {
@@ -73,27 +73,26 @@ class DhsGraphContainer extends React.Component {
     }
   }
 
-  handleUpdate(data) {
+  _handleUpdate(data) {
     this.setState({
-      data: _.concat(this.state.data, this.cleanData(data.Data)),
+      data: _.concat(this.state.data, this._cleanData(data.Data)),
     });
   }
 
   render() {
     // If country code changed, update data
-    const changed = false;
     const currentValue =
       this.props.countryCode && this.props.countryCode.valueOf();
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
-      const indicators = this.props.indicators;
+      const {indicators} = this.props;
       const ajaxReqs = this.props.countryCode.map(c => {
-        const api = this.getUrl(c, this.props.indicators);
+        const api = this._getUrl(c, indicators);
         return (
           <AjaxContainer
             key={c}
-            handleUpdate={this.handleUpdate}
+            handleUpdate={this._handleUpdate}
             apiUrl={api}
           />
         );

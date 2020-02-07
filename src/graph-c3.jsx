@@ -13,11 +13,20 @@ class C3GraphBox extends React.Component {
   constructor(props) {
     super(props);
 
+    // chart
+    this.chart = undefined;
+
     //binding
     this._makeViz = this._makeViz.bind(this);
     this._destroyViz = this._destroyViz.bind(this);
     this._updateGraphData = this._updateGraphData.bind(this);
     this._mapChartType = this._mapChartType.bind(this);
+  }
+
+  _destroyViz() {
+    if (!!this.chart) {
+      this.chart.destroy();
+    }
   }
 
   _makeViz() {
@@ -79,20 +88,7 @@ class C3GraphBox extends React.Component {
     this._makeViz();
 
     // Set up data updater
-    this.debounceUpdate = _.debounce(data => {
-      this._makeViz();
-    }, 1000);
-
-    // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(type => {
-      this._makeViz();
-    }, 500);
-  }
-
-  _destroyViz() {
-    if (this.chart != "undefined" && this.chart != null) {
-      this.chart.destroy();
-    }
+    this.debounceUpdate = _.debounce(() => this._makeViz(), 1000);
   }
 
   componentWillUnmount() {
@@ -107,7 +103,7 @@ class C3GraphBox extends React.Component {
 
       // Update graph data
       if (this.chart && this.debounceUpdate) {
-        this.debounceUpdate(this.props.data);
+        this.debounceUpdate();
       }
     }
 
@@ -117,12 +113,11 @@ class C3GraphBox extends React.Component {
       this.preType = currentType;
 
       // Update graph data
-      if (this.chart && this.debounceGraphTypeUpdate) {
-        this.debounceGraphTypeUpdate(this.props.graphType);
+      if (this.chart && this.debounceUpdate) {
+        this.debounceUpdate();
       }
     }
 
-    // Render
     return (
       <div>
         <figure id={this.props.containerId} style={{minHeight: "500px"}}>

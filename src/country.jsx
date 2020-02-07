@@ -33,8 +33,8 @@ class CountryBox extends React.Component {
     const isItemActive = (activeItem, i) => {
       return (
         activeItem &&
-        _.some(activeItem, function(item) {
-          return i.iso2Code == item.iso2Code;
+        _.some(activeItem, item => {
+          return i.iso2Code === item.iso2Code;
         })
       );
     };
@@ -46,7 +46,6 @@ class CountryBox extends React.Component {
 
     // Item value
     const getItemValue = i => {
-      //return i.iso2Code;
       return {
         iso2Code: i.iso2Code,
         name: i.name,

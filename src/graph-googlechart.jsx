@@ -12,6 +12,9 @@ class GoogleGraphBox extends React.Component {
   constructor(props) {
     super(props);
 
+    // the chart
+    this.chart = undefined;
+
     //binding
     this._makeViz = this._makeViz.bind(this);
     this._updateGraphData = this._updateGraphData.bind(this);

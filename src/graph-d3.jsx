@@ -14,12 +14,15 @@ class D3PlusGraphBox extends React.Component {
   constructor(props) {
     super(props);
 
+    // the chart
+    this.chart = undefined;
+
     //binding
-    this.makeViz = this.makeViz.bind(this);
+    this._makeViz = this._makeViz.bind(this);
     this._updateGraphConfig = this._updateGraphConfig.bind(this);
   }
 
-  makeViz() {
+  _makeViz() {
     let config = {
       id: "category",
       text: "text",
@@ -37,10 +40,10 @@ class D3PlusGraphBox extends React.Component {
         value: this.props.footer,
       },
     };
+    config = _.merge(config, this._updateGraphConfig(this.props.data));
 
     // Draw graph
-    config = _.merge(config, this._updateGraphConfig(this.props.data));
-    this.viz = d3plus
+    this.chart = d3plus
       .viz()
       .container("#" + this.props.containerId)
       .config(config)
@@ -75,32 +78,32 @@ class D3PlusGraphBox extends React.Component {
 
   componentDidMount() {
     // Initialize graph
-    this.makeViz();
+    this._makeViz();
 
     // Set up data updater
     const that = this;
     this.debounceUpdate = _.debounce(data => {
       const config = that._updateGraphConfig(data);
-      that.viz.config(config);
-      that.viz.data(data);
-      that.viz.draw();
+      that.chart.config(config);
+      that.chart.data(data);
+      that.chart.draw();
     }, 1000);
 
     // Set up graph type updater
     this.debounceGraphTypeUpdate = _.debounce(type => {
-      that.viz.type(type);
-      that.viz.size(type == "line" ? "" : "value");
-      that.viz.shape(type == "line" ? "line" : "square");
+      that.chart.type(type);
+      that.chart.size(type == "line" ? "" : "value");
+      that.chart.shape(type == "line" ? "line" : "square");
 
       // Update config
       const config = that._updateGraphConfig(that.props.data);
-      that.viz.config(config);
-      that.viz.draw();
+      that.chart.config(config);
+      that.chart.draw();
     }, 500);
   }
 
   componentWillUnmount() {
-    this.viz = null;
+    this.chart = null;
   }
 
   render() {
@@ -110,7 +113,7 @@ class D3PlusGraphBox extends React.Component {
       this.preValue = currentValue;
 
       // Update graph data
-      if (this.viz && this.debounceUpdate) {
+      if (this.chart && this.debounceUpdate) {
         this.debounceUpdate(this.props.data);
       }
     }
@@ -121,7 +124,7 @@ class D3PlusGraphBox extends React.Component {
       this.preType = currentType;
 
       // Update graph data
-      if (this.viz && this.debounceGraphTypeUpdate) {
+      if (this.chart && this.debounceGraphTypeUpdate) {
         this.debounceGraphTypeUpdate(this.props.graphType);
       }
     }

@@ -13,16 +13,23 @@ class ChartJSGraphBox extends React.Component {
   constructor(props) {
     super(props);
 
+    this.chart = undefined;
+
     //binding
+    this._destroyViz = this._destroyViz.bind(this);
     this._makeViz = this._makeViz.bind(this);
     this._updateGraphData = this._updateGraphData.bind(this);
   }
 
-  _makeViz() {
-    // Destroy old one if exists
-    if (this.chart != "undefined" && this.chart != null) {
+  _destroyViz() {
+    if (!!this.chart) {
       this.chart.destroy();
     }
+  }
+
+  _makeViz() {
+    // Destroy old one if exists
+    this._destroyViz();
 
     // Reformat query data to datatable consumable forms.
     const data = this._updateGraphData(this.props.unifiedData);
@@ -91,19 +98,19 @@ class ChartJSGraphBox extends React.Component {
 
     // Set up data updater
     const that = this;
-    this.debounceUpdate = _.debounce(function(data) {
+    this.debounceUpdate = _.debounce(data => {
       that.chart.data = that._updateGraphData(data);
       that.chart.update();
     }, 1000);
 
     // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(function(type) {
+    this.debounceGraphTypeUpdate = _.debounce(type => {
       that._makeViz();
     }, 500);
   }
 
   componentWillUnmount() {
-    this.chart.destroy();
+    this._destroyViz();
   }
 
   render() {

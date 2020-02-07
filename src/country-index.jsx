@@ -5,13 +5,12 @@ class CountryIndex extends React.Component {
   render() {
     // Build A-Z index
     const alphabet = "abcdefghijklmnopqrstuvwxyz".toUpperCase().split("");
-    const current = this.props.current;
-    const setIndex = this.props.setIndex;
+    const {current, setIndex} = this.props;
     const index = alphabet.map(letter => {
       const highlight = classNames("waves-effect waves-light", {
-        active: current == letter,
+        active: current === letter,
       });
-      const anchor = "#" + letter;
+      const anchor = "#${letter}";
       return (
         <li
           key={letter}
