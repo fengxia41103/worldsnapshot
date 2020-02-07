@@ -1,12 +1,7 @@
 import React from "react";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-//import WayPoint from 'react-waypoint';
-
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 //****************************************
 //
@@ -25,10 +20,10 @@ class GoogleGraphBox extends React.Component {
 
   _makeViz() {
     // Reformat query data to datatable consumable forms.
-    var data = this._updateGraphData(this.props.data);
+    const data = this._updateGraphData(this.props.data);
 
     // Chart options
-    var options = {
+    const options = {
       title: this.props.title,
       subtitle: this.props.footer,
       legend: "bottom",
@@ -83,7 +78,7 @@ class GoogleGraphBox extends React.Component {
 
   _updateGraphData(data) {
     // Return a new Google Datatable
-    var d = d3
+    const d = d3
       .nest()
       .key(function(d) {
         return d.year;
@@ -96,27 +91,27 @@ class GoogleGraphBox extends React.Component {
     // Get all categories. This is necessary so we can handle
     // missing values. Otherwise, there will be row
     // that has less values than the number of columns.
-    var categories = _.keys(
-      _.countBy(data, function(item) {
+    const categories = _.keys(
+      _.countBy(data, item => {
         return item.category;
       }),
     );
 
     // Convert format from a flat two-dimension array
     // to a table with columns: year, category 1, category 2, ...
-    var datatable = new Array();
-    _.forEach(d, function(byYear) {
-      var year = byYear.key;
-      var values = [];
+    const datatable = new Array();
+    _.forEach(d, byYear => {
+      const year = byYear.key;
+      const values = [];
 
-      var byCategory = _.groupBy(byYear.values, function(item) {
+      const byCategory = _.groupBy(byYear.values, function(item) {
         return item.key;
       });
 
-      _.forEach(categories, function(cat) {
+      _.forEach(categories, cat => {
         if (byCategory.hasOwnProperty(cat)) {
-          _.forEach(byCategory[cat], function(item) {
-            _.forEach(item.values, function(val) {
+          _.forEach(byCategory[cat], item => {
+            _.forEach(item.values, val => {
               values.push(val.value);
             });
           });
@@ -129,16 +124,16 @@ class GoogleGraphBox extends React.Component {
 
     // Convert formatted data to google DataTable
     categories.unshift("Year");
-    var formattedData = {
+    const formattedData = {
       categories: categories,
       datatable: datatable,
     };
 
     // Create a new data table
-    var myDataTable = new google.visualization.DataTable();
+    const myDataTable = new google.visualization.DataTable();
 
     // Data table headers
-    _.forEach(formattedData.categories, function(cat) {
+    _.forEach(formattedData.categories, cat => {
       if (cat == "Year") {
         myDataTable.addColumn("string", cat);
       } else {
@@ -160,15 +155,15 @@ class GoogleGraphBox extends React.Component {
     google.charts.setOnLoadCallback(this._makeViz);
 
     // Set up data updater
-    var that = this;
-    this.debounceUpdate = _.debounce(function(data) {
-      var datatable = that._updateGraphData(data);
+    const that = this;
+    this.debounceUpdate = _.debounce(data => {
+      const datatable = that._updateGraphData(data);
       that.chart.setDataTable(datatable);
       that.chart.draw();
     }, 1000);
 
     // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(function(type) {
+    this.debounceGraphTypeUpdate = _.debounce(type => {
       that.chart.setChartType(that._mapChartType(type));
       that.chart.draw();
     }, 500);
@@ -180,7 +175,7 @@ class GoogleGraphBox extends React.Component {
 
   render() {
     // If data changed
-    var currentValue = this.props.data != null && this.props.data.length;
+    const currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -191,7 +186,7 @@ class GoogleGraphBox extends React.Component {
     }
 
     // If type changed
-    var currentType = this.props.graphType && this.props.graphType.valueOf();
+    const currentType = this.props.graphType && this.props.graphType.valueOf();
     if (currentType != null && this.preType !== currentType) {
       this.preType = currentType;
 

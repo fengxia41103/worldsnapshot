@@ -1,16 +1,8 @@
 import React from "react";
 import Chart from "chart.js";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
-
-var randomColorGenerator = function() {
-  return "#" + (Math.random().toString(16) + "0000000").slice(2, 8);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId, randomColorGenerator} from "./helper.jsx";
 
 //****************************************
 //
@@ -33,10 +25,10 @@ class ChartJSGraphBox extends React.Component {
     }
 
     // Reformat query data to datatable consumable forms.
-    var data = this._updateGraphData(this.props.unifiedData);
+    const data = this._updateGraphData(this.props.unifiedData);
 
     // Chart options
-    var options = {
+    const options = {
       scales: {
         yAxes: [
           {
@@ -56,7 +48,7 @@ class ChartJSGraphBox extends React.Component {
     };
 
     // Render chart
-    var id = this.props.containerId;
+    const id = this.props.containerId;
     this.chart = new Chart(id, {
       type: this.props.graphType,
       data: {
@@ -71,9 +63,9 @@ class ChartJSGraphBox extends React.Component {
     // data: is a 2D array, [[1970, val 1, val 2,..], [1971, val3, val 4],...]
     // First transpose this matrix so the now it becomes
     // [[1970, 1971, ...], [val1, val3, ....]]
-    var transposed = _.zip.apply(_, data.datatable);
+    const transposed = _.zip.apply(_, data.datatable);
 
-    var formattedData = data.categories.map(function(country, index) {
+    const formattedData = data.categories.map(function(country, index) {
       return {
         label: country,
         data: transposed[index + 1],
@@ -98,7 +90,7 @@ class ChartJSGraphBox extends React.Component {
     this._makeViz();
 
     // Set up data updater
-    var that = this;
+    const that = this;
     this.debounceUpdate = _.debounce(function(data) {
       that.chart.data = that._updateGraphData(data);
       that.chart.update();
@@ -116,7 +108,7 @@ class ChartJSGraphBox extends React.Component {
 
   render() {
     // If data changed
-    var currentValue = this.props.data != null && this.props.data.length;
+    const currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -127,7 +119,7 @@ class ChartJSGraphBox extends React.Component {
     }
 
     // If type changed
-    var currentType = this.props.graphType && this.props.graphType.valueOf();
+    const currentType = this.props.graphType && this.props.graphType.valueOf();
     if (currentType != null && this.preType !== currentType) {
       this.preType = currentType;
 

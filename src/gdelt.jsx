@@ -1,12 +1,8 @@
 import React from "react";
 import ProgressBox from "./progress.jsx";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-
-var randomId = function() {
-  return "CH" + (Math.random() * 1e32).toString(12);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 class IFrameBox extends React.Component {
   constructor(props) {
@@ -26,7 +22,7 @@ class IFrameBox extends React.Component {
   }
 
   render() {
-    var style = {
+    const style = {
       height: "100vh",
       width: "100%",
     };
@@ -48,8 +44,8 @@ class IFrameBox extends React.Component {
 
 class WordcloudBox extends React.Component {
   render() {
-    var countryName = this.props.activeCountry.name.toLowerCase();
-    var src =
+    const countryName = this.props.activeCountry.name.toLowerCase();
+    const src =
       "http://api.gdeltproject.org/api/v1/search_ftxtsearch/search_ftxtsearch?query=" +
       countryName +
       "&output=wordcloud&outputtype=english";
@@ -72,7 +68,7 @@ class WordcloudBox extends React.Component {
 
 class NewsImageBox extends React.Component {
   render() {
-    var src =
+    const src =
       "http://api.gdeltproject.org/api/v1/search_ftxtsearch/search_ftxtsearch?query=" +
       this.props.activeCountry.name +
       "&output=artimgonlycollage&outputtype=theme";
@@ -89,7 +85,7 @@ class NewsImageBox extends React.Component {
 
 class ToneTimelineBox extends React.Component {
   render() {
-    var src =
+    const src =
       "http://api.gdeltproject.org/api/v1/search_ftxtsearch/search_ftxtsearch?query=" +
       this.props.activeCountry.name +
       "&output=timeline&outputtype=tone";
@@ -109,7 +105,7 @@ class ToneTimelineBox extends React.Component {
 
 class GDELTBox extends React.Component {
   render() {
-    var countries = _.sortBy(this.props.activeItem, "iso2Code");
+    const countries = _.sortBy(this.props.activeItem, "iso2Code");
     const clouds = countries.map(c => {
       return (
         <div key={randomId()}>

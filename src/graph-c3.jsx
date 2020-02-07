@@ -1,12 +1,8 @@
 import React from "react";
 import c3 from "c3";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 //****************************************
 //
@@ -29,10 +25,10 @@ class C3GraphBox extends React.Component {
     this._destroyViz();
 
     // Reformat query data to datatable consumable forms.
-    var data = this._updateGraphData(this.props.unifiedData);
+    const data = this._updateGraphData(this.props.unifiedData);
 
     // Chart options
-    var options = {
+    const options = {
       bindto: "#" + this.props.containerId,
       data: {
         x: "x", // hard-coded x-axis indicator
@@ -59,9 +55,9 @@ class C3GraphBox extends React.Component {
     // data: is a 2D array, [[1970, val 1, val 2,..], [1971, val3, val 4],...]
     // First transpose this matrix so the now it becomes
     // [[1970, 1971, ...], [val1, val3, ....]]
-    var transposed = _.zip.apply(_, data.datatable);
-    var formattedData = data.categories.map(function(country, index) {
-      var data = transposed[index + 1];
+    const transposed = _.zip.apply(_, data.datatable);
+    const formattedData = data.categories.map((country, index) => {
+      const data = transposed[index + 1];
       data.unshift(country);
       return data;
     });
@@ -69,7 +65,7 @@ class C3GraphBox extends React.Component {
     // Add x-axis data, must be in format
     // ["x", val1, val2, ....] <-- first element
     // is the same character defined in optioon(see above)
-    var x = transposed[0];
+    const x = transposed[0];
     x.unshift("x");
     formattedData.unshift(x);
 
@@ -83,13 +79,12 @@ class C3GraphBox extends React.Component {
     this._makeViz();
 
     // Set up data updater
-    var that = this;
-    this.debounceUpdate = _.debounce(function(data) {
+    this.debounceUpdate = _.debounce(data => {
       this._makeViz();
     }, 1000);
 
     // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(function(type) {
+    this.debounceGraphTypeUpdate = _.debounce(type => {
       this._makeViz();
     }, 500);
   }
@@ -106,7 +101,7 @@ class C3GraphBox extends React.Component {
 
   render() {
     // If data changed
-    var currentValue = this.props.data != null && this.props.data.length;
+    const currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -117,7 +112,7 @@ class C3GraphBox extends React.Component {
     }
 
     // If type changed
-    var currentType = this.props.graphType && this.props.graphType.valueOf();
+    const currentType = this.props.graphType && this.props.graphType.valueOf();
     if (currentType != null && this.preType !== currentType) {
       this.preType = currentType;
 

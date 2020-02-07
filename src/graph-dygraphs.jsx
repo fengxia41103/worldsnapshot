@@ -1,16 +1,8 @@
 import React from "react";
 import Dygraph from "dygraphs";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
-
-var randomColorGenerator = function() {
-  return "#" + (Math.random().toString(16) + "0000000").slice(2, 8);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId, randomColorGenerator} from "./helper.jsx";
 
 //****************************************
 //
@@ -33,20 +25,20 @@ class DygraphsGraphBox extends React.Component {
     this._destroyViz();
 
     // Reformat query data to datatable consumable forms.
-    var data = this._updateGraphData(this.props.unifiedData);
-    var type = this._mapChartType(this.props.graphType);
-    var id = this.props.containerId;
-    var headers = ["x"].concat(this.props.unifiedData.categories);
+    const data = this._updateGraphData(this.props.unifiedData);
+    const type = this._mapChartType(this.props.graphType);
+    const id = this.props.containerId;
+    const headers = ["x"].concat(this.props.unifiedData.categories);
 
-    var legendFormatter = function(data) {
-      var legends = data.series.forEach(function(series) {
+    const legendFormatter = data => {
+      const legends = data.series.forEach(series => {
         if (!series.isVisible) return;
 
-        var highlight = "";
+        let highlight = "";
         if (series.isHighlighted) {
           highlight = "pink darken-3";
         }
-        var legendLine = (
+        const legendLine = (
           <tr>
             <td className={highlight}>{series.labelHTML}</td>
             <td>{series.yHTML}</td>
@@ -60,23 +52,26 @@ class DygraphsGraphBox extends React.Component {
       );
     };
 
-    var legendFormatter2 = function(data) {
+    const legendFormatter2 = data => {
       if (data.x == null) {
         // This happens when there's no selection and {legend: 'always'} is set.
         return (
           "<br>" +
           data.series
-            .map(function(series) {
+            .map(series => {
               return series.dashHTML + " " + series.labelHTML;
             })
             .join("<br>")
         );
       }
 
-      var html = this.getLabels()[0] + ": " + data.xHTML;
-      data.series.forEach(function(series) {
+      // BUG: `.getLabels` is not defined!
+      let html = this.getLabels()[0] + ": " + data.xHTML;
+
+      data.series.forEach(series => {
         if (!series.isVisible) return;
-        var labeledData = series.labelHTML + ": " + series.yHTML;
+
+        let labeledData = series.labelHTML + ": " + series.yHTML;
         if (series.isHighlighted) {
           labeledData =
             '<span class="pink darken-3 white-text">' + labeledData + "</span>";
@@ -87,9 +82,9 @@ class DygraphsGraphBox extends React.Component {
     };
 
     // Darken a color
-    var darkenColor = function(colorStr) {
+    const darkenColor = colorStr => {
       // Defined in dygraph-utils.js
-      var color = Dygraph.toRGB_(colorStr);
+      const color = Dygraph.toRGB_(colorStr);
       color.r = Math.floor((255 + color.r) / 2);
       color.g = Math.floor((255 + color.g) / 2);
       color.b = Math.floor((255 + color.b) / 2);
@@ -99,26 +94,26 @@ class DygraphsGraphBox extends React.Component {
     // This function draws bars for a single series. See
     // multiColumnBarPlotter below for a plotter which can draw multi-series
     // bar charts.
-    var barChartPlotter = function(e) {
-      var ctx = e.drawingContext;
-      var points = e.points;
-      var y_bottom = e.dygraph.toDomYCoord(0);
+    const barChartPlotter = e => {
+      const ctx = e.drawingContext;
+      const points = e.points;
+      const y_bottom = e.dygraph.toDomYCoord(0);
 
       ctx.fillStyle = darkenColor(e.color);
 
       // Find the minimum separation between x-values.
       // This determines the bar width.
-      var min_sep = Infinity;
-      for (var i = 1; i < points.length; i++) {
-        var sep = points[i].canvasx - points[i - 1].canvasx;
+      let min_sep = Infinity;
+      for (let i = 1; i < points.length; i++) {
+        const sep = points[i].canvasx - points[i - 1].canvasx;
         if (sep < min_sep) min_sep = sep;
       }
-      var bar_width = Math.floor((2.0 / 3) * min_sep);
+      const bar_width = Math.floor((2.0 / 3) * min_sep);
 
       // Do the actual plotting.
-      for (var i = 0; i < points.length; i++) {
-        var p = points[i];
-        var center_x = p.canvasx;
+      for (let i = 0; i < points.length; i++) {
+        const p = points[i];
+        const center_x = p.canvasx;
 
         ctx.fillRect(
           center_x - bar_width / 2,
@@ -137,40 +132,41 @@ class DygraphsGraphBox extends React.Component {
     };
 
     // Multiple column bar chart
-    var multiColumnBarPlotter = function(e) {
+    const multiColumnBarPlotter = e => {
       // We need to handle all the series simultaneously.
       if (e.seriesIndex !== 0) return;
 
-      var g = e.dygraph;
-      var ctx = e.drawingContext;
-      var sets = e.allSeriesPoints;
-      var y_bottom = e.dygraph.toDomYCoord(0);
+      const g = e.dygraph;
+      const ctx = e.drawingContext;
+      const sets = e.allSeriesPoints;
+      const y_bottom = e.dygraph.toDomYCoord(0);
 
       // Find the minimum separation between x-values.
       // This determines the bar width.
-      var min_sep = Infinity;
-      for (var j = 0; j < sets.length; j++) {
-        var points = sets[j];
-        for (var i = 1; i < points.length; i++) {
-          var sep = points[i].canvasx - points[i - 1].canvasx;
+      let min_sep = Infinity;
+      for (let j = 0; j < sets.length; j++) {
+        const points = sets[j];
+        for (let i = 1; i < points.length; i++) {
+          const sep = points[i].canvasx - points[i - 1].canvasx;
           if (sep < min_sep) min_sep = sep;
         }
       }
-      var bar_width = Math.floor((2.0 / 3) * min_sep);
+      const bar_width = Math.floor((2.0 / 3) * min_sep);
 
-      var fillColors = [];
-      var strokeColors = g.getColors();
-      for (var i = 0; i < strokeColors.length; i++) {
+      const fillColors = [];
+      const strokeColors = g.getColors();
+      for (let i = 0; i < strokeColors.length; i++) {
         fillColors.push(darkenColor(strokeColors[i]));
       }
 
-      for (var j = 0; j < sets.length; j++) {
+      for (let j = 0; j < sets.length; j++) {
         ctx.fillStyle = fillColors[j];
         ctx.strokeStyle = strokeColors[j];
-        for (var i = 0; i < sets[j].length; i++) {
-          var p = sets[j][i];
-          var center_x = p.canvasx;
-          var x_left = center_x - (bar_width / 2) * (1 - j / (sets.length - 1));
+        for (let i = 0; i < sets[j].length; i++) {
+          const p = sets[j][i];
+          const center_x = p.canvasx;
+          const x_left =
+            center_x - (bar_width / 2) * (1 - j / (sets.length - 1));
 
           ctx.fillRect(
             x_left,
@@ -190,7 +186,7 @@ class DygraphsGraphBox extends React.Component {
     };
 
     // Chart options
-    var options = {
+    const options = {
       labels: headers,
       legend: "always",
       xlabel: "Year",
@@ -222,7 +218,7 @@ class DygraphsGraphBox extends React.Component {
     // data: is a 2D array, [[1970, val 1, val 2,..], [1971, val3, val 4],...]
     // First transpose this matrix so the now it becomes
     // [[1970, 1971, ...], [val1, val3, ....]]
-    var formatted = data.datatable.map(function(d) {
+    const formatted = data.datatable.map(d => {
       d[0] = parseInt(d[0]);
       return d;
     });
@@ -234,13 +230,13 @@ class DygraphsGraphBox extends React.Component {
     this._makeViz();
 
     // Set up data updater
-    var that = this;
-    this.debounceUpdate = _.debounce(function(data) {
+    const that = this;
+    this.debounceUpdate = _.debounce(data => {
       that._makeViz();
     }, 1000);
 
     // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(function(type) {
+    this.debounceGraphTypeUpdate = _.debounce(type => {
       that._makeViz();
     }, 500);
   }
@@ -257,7 +253,7 @@ class DygraphsGraphBox extends React.Component {
 
   render() {
     // If data changed
-    var currentValue = this.props.data != null && this.props.data.length;
+    const currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -268,7 +264,7 @@ class DygraphsGraphBox extends React.Component {
     }
 
     // If type changed
-    var currentType = this.props.graphType && this.props.graphType.valueOf();
+    const currentType = this.props.graphType && this.props.graphType.valueOf();
     if (currentType != null && this.preType !== currentType) {
       this.preType = currentType;
 

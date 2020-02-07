@@ -14,9 +14,10 @@ class Footer extends React.Component {
         </div>
         <div className="footer-copyright">
           <div className="container">
-            <i className="fa fa-copyright"></i>2016 PY Consulting Ltd.
+            <i className="fa fa-copyright"></i>2020 PY Consulting Ltd.
             <span className="grey-text text-lighten-4 right">
-              Made by <a href="http://fengxia.co">Feng Xia</a>
+              Made by{" "}
+              <a href="https://fengxia41103.github.com/myblog">Feng Xia</a>
             </span>
           </div>
         </div>

@@ -1,14 +1,8 @@
 import React from "react";
 import d3plus from "d3plus";
-import * as ReactBootstrap from "react-bootstrap";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-//import WayPoint from 'react-waypoint';
-
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 //****************************************
 //
@@ -22,11 +16,11 @@ class D3PlusGraphBox extends React.Component {
 
     //binding
     this.makeViz = this.makeViz.bind(this);
-    this.updateGraphConfig = this.updateGraphConfig.bind(this);
+    this._updateGraphConfig = this._updateGraphConfig.bind(this);
   }
 
   makeViz() {
-    var config = {
+    let config = {
       id: "category",
       text: "text",
       labels: true,
@@ -56,10 +50,10 @@ class D3PlusGraphBox extends React.Component {
   }
 
   _updateGraphConfig(data) {
-    var tmp = _.countBy(data, function(item) {
+    const tmp = _.countBy(data, item => {
       return item.category;
     });
-    var cat = null;
+
     if (_.size(tmp) > 1) {
       return {
         color: "category",
@@ -84,22 +78,22 @@ class D3PlusGraphBox extends React.Component {
     this.makeViz();
 
     // Set up data updater
-    var that = this;
-    this.debounceUpdate = _.debounce(function(data) {
-      var config = that._updateGraphConfig(data);
+    const that = this;
+    this.debounceUpdate = _.debounce(data => {
+      const config = that._updateGraphConfig(data);
       that.viz.config(config);
       that.viz.data(data);
       that.viz.draw();
     }, 1000);
 
     // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(function(type) {
+    this.debounceGraphTypeUpdate = _.debounce(type => {
       that.viz.type(type);
       that.viz.size(type == "line" ? "" : "value");
       that.viz.shape(type == "line" ? "line" : "square");
 
       // Update config
-      var config = that._updateGraphConfig(that.props.data);
+      const config = that._updateGraphConfig(that.props.data);
       that.viz.config(config);
       that.viz.draw();
     }, 500);
@@ -111,7 +105,7 @@ class D3PlusGraphBox extends React.Component {
 
   render() {
     // If data changed
-    var currentValue = this.props.data != null && this.props.data.length;
+    const currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -122,7 +116,7 @@ class D3PlusGraphBox extends React.Component {
     }
 
     // If type changed
-    var currentType = this.props.graphType && this.props.graphType.valueOf();
+    const currentType = this.props.graphType && this.props.graphType.valueOf();
     if (currentType != null && this.preType !== currentType) {
       this.preType = currentType;
 

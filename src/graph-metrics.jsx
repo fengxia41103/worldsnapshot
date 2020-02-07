@@ -1,8 +1,8 @@
 import React from "react";
 import MG from "metrics-graphics";
-
-var _ = require("lodash");
-var classNames = require("classnames");
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 //****************************************
 //
@@ -19,17 +19,17 @@ class MetricsGraphBox extends React.Component {
   }
 
   _updateGraphData(data) {
-    var transposed = _.zip.apply(_, data.datatable);
+    const transposed = _.zip.apply(_, data.datatable);
 
     if (transposed.length < 3) {
       // at least [[year..], [vals..]]
       return this.props.data;
     } else {
-      var newData = [];
-      var years = transposed[0];
-      for (var i = 1; i < transposed.length; i++) {
-        var tmp = _.zip(years, transposed[i]);
-        tmp = _.forEach(tmp, function(val, index) {
+      const newData = [];
+      const years = transposed[0];
+      for (let i = 1; i < transposed.length; i++) {
+        let tmp = _.zip(years, transposed[i]);
+        tmp = _.forEach(tmp, (val, index) => {
           tmp[index] = {
             year: val[0],
             value: val[1],
@@ -42,9 +42,9 @@ class MetricsGraphBox extends React.Component {
   }
 
   _makeViz() {
-    var data = this._updateGraphData(this.props.unifiedData);
-    var type = this.props.graphType;
-    var containerId = this.props.containerId;
+    const data = this._updateGraphData(this.props.unifiedData);
+    const type = this.props.graphType;
+    const containerId = this.props.containerId;
 
     // Update options
     // Note: we do NOT render bar chart using MetricsGraphics
@@ -78,15 +78,15 @@ class MetricsGraphBox extends React.Component {
     this._makeViz();
 
     // Set up data updater
-    var that = this;
-    this.debounceUpdate = _.debounce(function(data) {
+    const that = this;
+    this.debounceUpdate = _.debounce(data => {
       that._makeViz();
     }, 1000);
   }
 
   render() {
     // If data changed
-    var currentValue = this.props.data != null && this.props.data.length;
+    const currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 

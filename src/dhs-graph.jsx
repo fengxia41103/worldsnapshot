@@ -56,7 +56,7 @@ class DhsGraphContainer extends React.Component {
 
       // Data needs to be massaged
       for (let i = 0; i < data.length; i++) {
-        let country = data[i].DHS_CountryCode;
+        const country = data[i].DHS_CountryCode;
         tmp.push({
           country: country,
           uniqueKey: data[i].Indicator + i,

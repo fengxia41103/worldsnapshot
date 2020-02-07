@@ -1,16 +1,9 @@
 import React from "react";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-//import WayPoint from 'react-waypoint';
-
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
-
-// Load highcharts
-var Highcharts = require("highcharts");
-var addFunnel = require("highcharts/modules/funnel");
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
+import Highcharts from "highcharts";
+import addFunnel from "highcharts/modules/funnel";
 
 //****************************************
 //
@@ -29,10 +22,10 @@ class HighchartGraphBox extends React.Component {
 
   _makeViz() {
     // Reformat query data to datatable consumable forms.
-    var data = this._updateGraphData(this.props.unifiedData);
+    const data = this._updateGraphData(this.props.unifiedData);
 
     // Chart options
-    var options = {
+    const options = {
       chart: {
         type: this._mapChartType(this.props.graphType),
       },
@@ -87,9 +80,9 @@ class HighchartGraphBox extends React.Component {
     // data: is a 2D array, [[1970, val 1, val 2,..], [1971, val3, val 4],...]
     // First transpose this matrix so the now it becomes
     // [[1970, 1971, ...], [val1, val3, ....]]
-    var transposed = _.zip.apply(_, data.datatable);
+    const transposed = _.zip.apply(_, data.datatable);
 
-    var highchartData = data.categories.map(function(country, index) {
+    const highchartData = data.categories.map((country, index) => {
       return {
         name: country,
         data: transposed[index + 1],
@@ -114,9 +107,9 @@ class HighchartGraphBox extends React.Component {
     this._makeViz();
 
     // Set up data updater
-    var that = this;
-    this.debounceUpdate = _.debounce(function(data) {
-      var datatable = that._updateGraphData(data);
+    const that = this;
+    this.debounceUpdate = _.debounce(data => {
+      const datatable = that._updateGraphData(data);
       /* that.chart.update({
        *   series: datatable.series
        * }) */
@@ -125,7 +118,7 @@ class HighchartGraphBox extends React.Component {
     }, 1000);
 
     // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(function(type) {
+    this.debounceGraphTypeUpdate = _.debounce(type => {
       that.chart.update({
         chart: {
           type: that._mapChartType(type),
@@ -140,7 +133,7 @@ class HighchartGraphBox extends React.Component {
 
   render() {
     // If data changed
-    var currentValue = this.props.data != null && this.props.data.length;
+    const currentValue = this.props.data != null && this.props.data.length;
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
@@ -151,7 +144,7 @@ class HighchartGraphBox extends React.Component {
     }
 
     // If type changed
-    var currentType = this.props.graphType && this.props.graphType.valueOf();
+    const currentType = this.props.graphType && this.props.graphType.valueOf();
     if (currentType != null && this.preType !== currentType) {
       this.preType = currentType;
 
