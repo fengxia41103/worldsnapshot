@@ -1,7 +1,6 @@
 // header.js
 import React from "react";
-
-require("./stylesheets/header.sass");
+import "./stylesheets/header.sass";
 
 class Header extends React.Component {
   render() {

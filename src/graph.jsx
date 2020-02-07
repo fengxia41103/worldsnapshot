@@ -1,6 +1,9 @@
 import React from "react";
 import d3plus from "d3plus";
 import * as ReactBootstrap from "react-bootstrap";
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 import D3PlusGraphBox from "./graph-d3.jsx";
 import GoogleGraphBox from "./graph-googlechart.jsx";
@@ -11,16 +14,7 @@ import ChartJSGraphBox from "./graph-chartjs.jsx";
 import PlotlyGraphBox from "./graph-plotly.jsx";
 import DygraphsGraphBox from "./graph-dygraphs.jsx";
 import C3GraphBox from "./graph-c3.jsx";
-
 import WbIndicatorInfo from "./wb-indicator-info.jsx";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-//import WayPoint from 'react-waypoint';
-
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
 
 //****************************************
 //
@@ -32,7 +26,7 @@ class GraphFactory extends React.Component {
     super(props);
 
     // state
-    var type =
+    const type =
       typeof this.props.type === undefined || !this.props.type
         ? "bar"
         : this.props.type;
@@ -59,8 +53,8 @@ class GraphFactory extends React.Component {
   }
 
   render() {
-    var data = this.props.data;
-    var graphType = this.state.graphType;
+    const data = this.props.data;
+    const graphType = this.state.graphType;
 
     // Validate data set
     if (typeof data == undefined || data === null || data.length == 0) {
@@ -68,14 +62,14 @@ class GraphFactory extends React.Component {
     }
 
     // Country code is an array
-    var countries = this.props.countryCode.join("/");
+    const countries = this.props.countryCode.join("/");
 
     // Render graph by chart type
     if (graphType == "pie") {
       // Regroup by year
-      var tmp = {};
-      for (var i = 0; i < data.length; i++) {
-        var year = data[i].year;
+      const tmp = {};
+      for (let i = 0; i < data.length; i++) {
+        const year = data[i].year;
         if (tmp.hasOwnProperty(year)) {
           tmp[year].push(data[i]);
         } else {
@@ -84,10 +78,10 @@ class GraphFactory extends React.Component {
       }
 
       // One pie chart per year's data
-      var graphs = [];
+      const graphs = [];
       for (year in tmp) {
-        var containerId = randomId();
-        var title = [this.props.title, year].join(" -- ");
+        const containerId = randomId();
+        const title = [this.props.title, year].join(" -- ");
 
         graphs.push(
           <div key={randomId()} style={{display: "inline-block"}}>
@@ -131,7 +125,7 @@ class GraphFactory extends React.Component {
     } else {
       // Default graphs
       // container id
-      var containerId = randomId();
+      const containerId = randomId();
 
       return (
         <div className="row">
@@ -169,7 +163,7 @@ class GraphFactory extends React.Component {
 
 class GraphBox extends React.Component {
   render() {
-    var engine = this.props.graphEngine.toLowerCase();
+    const engine = this.props.graphEngine.toLowerCase();
     switch (engine) {
       case "c3":
         return (
@@ -227,7 +221,7 @@ class GraphBox extends React.Component {
 
 class GraphConfigBox extends React.Component {
   render() {
-    var randomKey = randomId();
+    const randomKey = randomId();
     return (
       <div className="right col l3 m3 s12" style={{zIndex: 999}}>
         <ReactBootstrap.DropdownButton title="config" id={randomKey}>
@@ -254,11 +248,11 @@ class GraphConfigBox extends React.Component {
 
 class GraphTypeBox extends React.Component {
   render() {
-    var current = this.props.current;
-    var setGraphType = this.props.setGraphType;
-    var types = ["bar", "line", "table"];
+    const current = this.props.current;
+    const setGraphType = this.props.setGraphType;
+    const types = ["bar", "line", "table"];
     const options = types.map(t => {
-      var highlight = classNames("collection-item", {
+      const highlight = classNames("collection-item", {
         "teal lighten-2 grey-text text-lighten-4": current == t,
       });
       return (
@@ -281,9 +275,9 @@ class GraphTypeBox extends React.Component {
 
 class GraphEngineBox extends React.Component {
   render() {
-    var current = this.props.current.toLowerCase();
-    var setGraphEngine = this.props.setGraphEngine;
-    var types = [
+    const current = this.props.current.toLowerCase();
+    const setGraphEngine = this.props.setGraphEngine;
+    const types = [
       "d3Plus",
       "c3",
       "google",
@@ -294,7 +288,7 @@ class GraphEngineBox extends React.Component {
       "dygraphs",
     ];
     const options = types.map(t => {
-      var highlight = classNames("collection-item", {
+      const highlight = classNames("collection-item", {
         "teal lighten-2 grey-text text-lighten-4": current == t,
       });
       return (

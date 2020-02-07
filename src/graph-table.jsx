@@ -1,12 +1,7 @@
 import React from "react";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-//import WayPoint from 'react-waypoint';
-
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 //****************************************
 //
@@ -19,8 +14,9 @@ class GraphDatatable extends React.Component {
     const headers = this.props.unifiedData.categories.map(h => {
       return <th key={randomId()}>{h}</th>;
     });
+
     const fields = this.props.unifiedData.datatable.map(rows => {
-      var randomKey = randomId();
+      const randomKey = randomId();
       const values = rows.map(val => {
         return <td key={randomId()}>{val}</td>;
       });

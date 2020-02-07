@@ -1,12 +1,15 @@
 import React from "react";
 import GraphFactory from "./graph.jsx";
 import AjaxContainer from "./ajax.jsx";
-
-var _ = require("lodash");
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 class WbGraphContainer extends React.Component {
   constructor(props) {
     super(props);
+
+    //state
     this.state = {
       data: [],
       unifiedData: [],
@@ -23,9 +26,9 @@ class WbGraphContainer extends React.Component {
 
   getUrl(countryCode, indicator) {
     // Build DHS API url
-    var baseUrl = "http://api.worldbank.org/v2/en/countries/";
-    var tmp = [countryCode, "indicators", indicator].join("/");
-    var query =
+    const baseUrl = "http://api.worldbank.org/v2/en/countries/";
+    const tmp = [countryCode, "indicators", indicator].join("/");
+    const query =
       "?date=" +
       this.state.start +
       ":" +
@@ -35,8 +38,8 @@ class WbGraphContainer extends React.Component {
   }
 
   handleUpdate(data) {
-    var cleaned = _.concat(this.state.data, this._cleanData(data[1]));
-    var unified = this._unifiedData(cleaned);
+    const cleaned = _.concat(this.state.data, this._cleanData(data[1]));
+    const unified = this._unifiedData(cleaned);
 
     this.setState({
       data: cleaned,
@@ -51,13 +54,13 @@ class WbGraphContainer extends React.Component {
     if (typeof data === "undefined" || data === null) {
       return [];
     } else {
-      var tmp = [];
-      for (var i = 0; i < data.length; i++) {
-        var country = data[i].country.id;
+      const tmp = [];
+      for (let i = 0; i < data.length; i++) {
+        const country = data[i].country.id;
 
         // Original data can be null or 0,
         // Do NOT skip! Set null to 0.
-        var value = 0;
+        let value = 0;
         if (data[i].value !== null) {
           value = parseFloat(data[i].value);
           // Internal data format is a dict.
@@ -85,12 +88,12 @@ class WbGraphContainer extends React.Component {
     // and each row is value: [Year, country A value, country B value,....].
     // This format was first designed to generate Google datatable for its chart engine.
     // I think it should also be the base format for other engines.
-    var d = d3
+    const d = d3
       .nest()
-      .key(function(d) {
+      .key(d => {
         return d.year;
       })
-      .key(function(d) {
+      .key(d => {
         return d.category;
       })
       .entries(data);
@@ -98,27 +101,27 @@ class WbGraphContainer extends React.Component {
     // Get all categories. This is necessary so we can handle
     // missing values. Otherwise, there will be row
     // that has less values than the number of columns.
-    var categories = _.keys(
-      _.countBy(data, function(item) {
+    const categories = _.keys(
+      _.countBy(data, item => {
         return item.category;
       }),
     );
 
     // Convert format from a flat two-dimension array
     // to a table with columns: year, category 1, category 2, ...
-    var datatable = new Array();
-    _.forEach(d, function(byYear) {
-      var year = byYear.key;
-      var values = [];
+    const datatable = new Array();
+    _.forEach(d, byYear => {
+      const year = byYear.key;
+      const values = [];
 
-      var byCategory = _.groupBy(byYear.values, function(item) {
+      const byCategory = _.groupBy(byYear.values, item => {
         return item.key;
       });
 
-      _.forEach(categories, function(cat) {
+      _.forEach(categories, cat => {
         if (byCategory.hasOwnProperty(cat)) {
-          _.forEach(byCategory[cat], function(item) {
-            _.forEach(item.values, function(val) {
+          _.forEach(byCategory[cat], item => {
+            _.forEach(item.values, val => {
               values.push(val.value);
             });
           });
@@ -139,16 +142,15 @@ class WbGraphContainer extends React.Component {
 
   render() {
     // If country code changed, update data
-    var changed = false;
-    var currentValue =
+    const currentValue =
       this.props.countryCode && this.props.countryCode.valueOf();
     if (currentValue != null && this.preValue !== currentValue) {
       this.preValue = currentValue;
 
       // Iterate through requested countries
-      var indicator = this.props.indicator;
+      const indicator = this.props.indicator;
       const ajaxReqs = this.props.countryCode.map(c => {
-        var api = this.getUrl(c, indicator);
+        const api = this.getUrl(c, indicator);
         return (
           <AjaxContainer
             key={c}
@@ -162,7 +164,7 @@ class WbGraphContainer extends React.Component {
     }
 
     // Render graphs
-    var footer = "Source: The World Bank";
+    const footer = "Source: The World Bank";
     return (
       <div>
         {/* Graph */}

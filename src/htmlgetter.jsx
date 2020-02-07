@@ -1,5 +1,6 @@
 import React from "react";
-var _ = require("lodash");
+import _ from "lodash";
+import classNames from "classnames";
 
 //****************************************
 //
@@ -29,25 +30,25 @@ class HTMLGetterContainer extends React.Component {
     }
 
     // Get data
-    var api = this.props.apiUrl;
-    var handleUpdate = this.props.handleUpdate;
+    const api = this.props.apiUrl;
+    const handleUpdate = this.props.handleUpdate;
     console.log("Getting: " + api);
 
     // Work horse
     fetch(api)
-      .then(function(resp) {
+      .then(resp => {
         return resp.text();
       })
-      .then(function(body) {
+      .then(body => {
         if (typeof body != "undefined" && body) {
           handleUpdate(body);
         }
       })
-      .catch(function(error) {});
+      .catch(error => {});
   }
 
   componentWillMount() {
-    this.debounceGetData = _.debounce(function() {
+    this.debounceGetData = _.debounce(() => {
       this.getData();
     }, 200);
   }

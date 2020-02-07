@@ -1,12 +1,12 @@
 // main.js
-require("es5-shim");
-require("es5-shim/es5-sham");
-require("console-polyfill");
-require("font-awesome/css/font-awesome.css");
-require("bootstrap/dist/css/bootstrap.min.css");
-require("bootstrap");
-require("materialize-loader");
-require("./stylesheets/my.css");
+import "es5-shim";
+import "es5-shim/es5-sham";
+import "console-polyfill";
+import "font-awesome/css/font-awesome.css";
+import "materialize-loader";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
+import "./stylesheets/my.css";
 
 import React, {Component} from "react";
 import ReactDom from "react-dom";

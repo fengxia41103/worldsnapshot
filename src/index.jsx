@@ -1,11 +1,8 @@
 import React from "react";
 import AjaxContainer from "./ajax.jsx";
-
-var _ = require("lodash");
-var classNames = require("classnames");
-var randomId = function() {
-  return "MY" + (Math.random() * 1e32).toString(12);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 // Index can be numbers, so prepend an arbitrary letter
 // to make HTML acceptable ID string
@@ -81,17 +78,17 @@ class IndexBox extends React.Component {
 class IndexList extends React.Component {
   render() {
     // Build A-Z index
-    var indexes = this.props.indexes;
-    var activeIndex = this.props.activeIndex;
-    var setIndex = this.props.setIndex;
-    var isIndexActive = this.props.isIndexActive;
+    const indexes = this.props.indexes;
+    const activeIndex = this.props.activeIndex;
+    const setIndex = this.props.setIndex;
+    const isIndexActive = this.props.isIndexActive;
 
-    var theList = indexes.map(function(letter) {
-      var active = classNames("waves-effect waves-light", {
+    const theList = indexes.map(letter => {
+      const active = classNames("waves-effect waves-light", {
         active: isIndexActive(activeIndex, letter),
       });
 
-      var anchor = "#" + FAKED_PREFIX + letter;
+      const anchor = "#" + FAKED_PREFIX + letter;
 
       // Render
       return (
@@ -130,23 +127,24 @@ class IndexList extends React.Component {
 
 class ItemList extends React.Component {
   render() {
-    var activeIndex = this.props.activeIndex;
-    var setItem = this.props.setItem;
-    var activeItem = this.props.activeItem;
-    var isItemActive = this.props.isItemActive;
-    var itemMapToIndex = this.props.itemMapToIndex;
-    var getItemValue = this.props.getItemValue;
-    var getItemRender = this.props.getItemRender;
+    const activeIndex = this.props.activeIndex;
+    const setItem = this.props.setItem;
+    const activeItem = this.props.activeItem;
+    const isItemActive = this.props.isItemActive;
+    const itemMapToIndex = this.props.itemMapToIndex;
+    const getItemValue = this.props.getItemValue;
+    const getItemRender = this.props.getItemRender;
 
-    var fields = this.props.items.map(function(c) {
-      var itemClass = classNames("chip", {
+    const fields = this.props.items.map(c => {
+      const itemClass = classNames("chip", {
         "teal lighten-2 grey-text text-lighten-4": isItemActive(activeItem, c),
       });
-      var tmpIndex = itemMapToIndex(c);
+      const tmpIndex = itemMapToIndex(c);
+
       if (tmpIndex == activeIndex) {
-        var randomKey = randomId();
-        var val = getItemValue(c);
-        var item = getItemRender(c);
+        const randomKey = randomId();
+        const val = getItemValue(c);
+        const item = getItemRender(c);
 
         return (
           <div key={randomKey} className={itemClass}>
@@ -156,7 +154,7 @@ class ItemList extends React.Component {
       }
     });
 
-    var id = FAKED_PREFIX + activeIndex;
+    const id = FAKED_PREFIX + activeIndex;
     return (
       <div>
         <h3 id={id}>{activeIndex}</h3>

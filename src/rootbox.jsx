@@ -8,12 +8,9 @@ import WbIndicators from "./wb-indicator.jsx";
 import CountryBox from "./country.jsx";
 import GDELTBox from "./gdelt.jsx";
 
-var _ = require("lodash");
-var classNames = require("classnames");
-
-var randomId = function() {
-  return "DHS" + (Math.random() * 1e32).toString(12);
-};
+import _ from "lodash";
+import classNames from "classnames";
+import {randomId} from "./helper.jsx";
 
 class RootBox extends React.Component {
   constructor(props) {
@@ -276,17 +273,17 @@ class RootBox extends React.Component {
   }
 
   setCountry(code) {
-    var existing = this.state.countryCode;
+    const existing = this.state.countryCode;
 
     // toggle it: if on the list, remove;
     // if not, add
-    var modified = null;
+    let modified = null;
     if (
-      _.some(existing, function(item) {
+      _.some(existing, item => {
         return item.iso2Code == code.iso2Code;
       })
     ) {
-      modified = _.filter(existing, function(item) {
+      modified = _.filter(existing, item => {
         return item.iso2Code != code.iso2Code;
       });
     } else {
@@ -301,7 +298,7 @@ class RootBox extends React.Component {
         countryCode: modified,
         index: 0,
       },
-      function() {
+      () => {
         this.graphsInDisplay = [];
 
         // Initial showing
@@ -317,9 +314,9 @@ class RootBox extends React.Component {
     });
 
     // Extend pre-existing indicator list
-    var tmp = this.state.graphs.slice();
-    var indicators = data[1];
-    for (var i = 0; i < indicators.length; i++) {
+    const tmp = this.state.graphs.slice();
+    const indicators = data[1];
+    for (let i = 0; i < indicators.length; i++) {
       tmp.push({
         title: indicators[i].name,
         indicator: indicators[i].id,
@@ -342,14 +339,16 @@ class RootBox extends React.Component {
     const graphTypes = _.shuffle(["line", "line", "line", "line", "bar"]);
 
     // Generate more graphs
-    var code = _.map(this.state.countryCode, "iso2Code");
-    var index = this.state.index;
-    var total = this.state.graphs.length;
-    var tmp = [];
-    for (var i = index, j = 0; i < Math.min(index + step, total); i++, j++) {
-      var id = randomId();
-      var g = this.state.graphs[i];
-      var graphType = "";
+    const code = _.map(this.state.countryCode, "iso2Code");
+    const index = this.state.index;
+    const total = this.state.graphs.length;
+    const indexEnd = Math.min(index + step, total);
+
+    const tmp = [];
+    for (let i = index, j = 0; i < indexEnd; i++, j++) {
+      const id = randomId("DHS");
+      const g = this.state.graphs[i];
+      let graphType = "";
 
       if (typeof g.type === "undefined") {
         graphType = graphTypes[j];
@@ -383,16 +382,16 @@ class RootBox extends React.Component {
 
     // Set up next starting index
     this.setState({
-      index: i,
+      index: indexEnd,
     });
   }
 
   render() {
-    var loadWbIndicators =
+    const loadWbIndicators =
       this.state.indicators.length < 1 ? (
         <WbIndicators handleUpdate={this.handleIndicatorUpdate} />
       ) : null;
-    var haveMore =
+    const haveMore =
       this.state.index > 0 && this.state.index < this.state.graphs.length ? (
         <div className="right-align">
           <span
