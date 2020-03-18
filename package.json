@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "./node_modules/.bin/webpack-dev-server --hot",
-    "build": "./node_modules/.bin/webpack -p"
+    "build": "./node_modules/.bin/webpack -p",
+    "deploy": "gh-pages -d dist -b master"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.1",
