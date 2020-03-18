@@ -21,32 +21,32 @@ class RootBox extends React.Component {
       countryCode: [],
       indicators: [],
       graphs: [
-        {
-          title:
-            "Age-specific fertility rate for the three years preceding the survey, expressed per 1,000 women",
-          indicators: [
-            "FE_FRTR_W_A15",
-            "FE_FRTR_W_A20",
-            "FE_FRTR_W_A25",
-            "FE_FRTR_W_A30",
-            "FE_FRTR_W_A35",
-            "FE_FRTR_W_A40",
-            "FE_FRTR_W_A45",
-          ],
-          type: "bar",
-          source: "dhs",
-        },
-        {
-          title: "HIV prevalence among couples",
-          indicators: [
-            "HA_HPAC_B_CPP",
-            "HA_HPAC_B_CPN",
-            "HA_HPAC_B_CNP",
-            "HA_HPAC_B_CNN",
-          ],
-          type: "pie",
-          source: "dhs",
-        },
+        /* {
+         *   title:
+         *     "Age-specific fertility rate for the three years preceding the survey, expressed per 1,000 women",
+         *   indicators: [
+         *     "FE_FRTR_W_A15",
+         *     "FE_FRTR_W_A20",
+         *     "FE_FRTR_W_A25",
+         *     "FE_FRTR_W_A30",
+         *     "FE_FRTR_W_A35",
+         *     "FE_FRTR_W_A40",
+         *     "FE_FRTR_W_A45",
+         *   ],
+         *   type: "bar",
+         *   source: "dhs",
+         * },
+         * {
+         *   title: "HIV prevalence among couples",
+         *   indicators: [
+         *     "HA_HPAC_B_CPP",
+         *     "HA_HPAC_B_CPN",
+         *     "HA_HPAC_B_CNP",
+         *     "HA_HPAC_B_CNN",
+         *   ],
+         *   type: "pie",
+         *   source: "dhs",
+         * }, */
         {
           title: "GNI per capita, Atlas method (current US$)",
           indicator: "NY.GNP.PCAP.CD",
@@ -362,8 +362,7 @@ class RootBox extends React.Component {
             key={id}
             countryCode={code}
             type={graphType}
-            {...g}
-          />,
+            {...g}/>
         );
       } else if (g.source === "wb") {
         tmp.push(
@@ -371,8 +370,7 @@ class RootBox extends React.Component {
             key={id}
             countryCode={code}
             type={graphType}
-            {...g}
-          />,
+            {...g}/>
         );
       }
     }

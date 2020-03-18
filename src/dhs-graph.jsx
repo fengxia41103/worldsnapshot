@@ -1,7 +1,7 @@
 import React from "react";
 import GraphFactory from "./graph.jsx";
 import AjaxContainer from "./ajax.jsx";
-import _ from "lodash";
+import _, {isEmpty, isNil, sortBy} from "lodash";
 
 class DhsGraphContainer extends React.Component {
   constructor(props) {
@@ -38,7 +38,7 @@ class DhsGraphContainer extends React.Component {
       ].join(","),
     };
 
-    const tmp = [];
+    let tmp = [];
     for (let key in queries) {
       let val = queries[key];
       if (val && val.length > 0) {
@@ -49,34 +49,35 @@ class DhsGraphContainer extends React.Component {
   }
 
   _cleanData(data) {
-    if (typeof data === "undefined" || data === null) {
-      return [];
-    } else {
-      const tmp = [];
+    let tmp = [];
 
-      // Data needs to be massaged
-      for (let i = 0; i < data.length; i++) {
-        const country = data[i].DHS_CountryCode;
-        tmp.push({
-          country: country,
-          uniqueKey: data[i].Indicator + i,
+    // Data needs to be massaged
+    for (let i = 0; i < data.length; i++) {
+      const country = data[i].DHS_CountryCode;
+      tmp.push({
+        country: country,
+        uniqueKey: data[i].Indicator + i,
 
-          // in String form, otherwise D3plus will convert "1986" to "1,986"
-          year: data[i].SurveyYear,
+        // in String form, otherwise D3plus will convert "1986" to "1,986"
+        year: data[i].SurveyYear,
 
-          value: data[i].Value,
-          category: data[i].Indicator,
-          text: [country, data[i].Indicator].join("-"), // Label for each data point
-        });
-      }
-      return _.sortBy(tmp, "year");
+        value: data[i].Value,
+        category: data[i].Indicator,
+        text: [country, data[i].Indicator].join("-"), // Label for each data point
+      });
     }
+
+    return sortBy(tmp, "year");
   }
 
   _handleUpdate(data) {
-    this.setState({
-      data: _.concat(this.state.data, this._cleanData(data.Data)),
-    });
+    if (!isNil(data.Data) && !isEmpty(data.Data)) {
+      let tmp=_.concat(this.state.data, this._cleanData(data.Data));
+
+      this.setState({
+        data: tmp
+      });
+    }
   }
 
   render() {
@@ -89,6 +90,7 @@ class DhsGraphContainer extends React.Component {
       const {indicators} = this.props;
       const ajaxReqs = this.props.countryCode.map(c => {
         const api = this._getUrl(c, indicators);
+
         return (
           <AjaxContainer
             key={c}
@@ -101,10 +103,13 @@ class DhsGraphContainer extends React.Component {
       return <div>{ajaxReqs}</div>;
     }
 
+
     // Render graphs
     const footer = "Source: USAID DHS Program";
     return (
-      <GraphFactory data={this.state.data} footer={footer} {...this.props} />
+      <GraphFactory data={this.state.data}
+                    footer={footer}
+                    {...this.props} />
     );
   }
 }

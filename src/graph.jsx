@@ -64,7 +64,7 @@ class GraphFactory extends React.Component {
     switch (graphType) {
       case "pie":
         // Regroup by year
-        const tmp = {};
+        let tmp = {};
         for (let i = 0; i < data.length; i++) {
           const year = data[i].year;
           if (tmp.hasOwnProperty(year)) {
@@ -75,7 +75,7 @@ class GraphFactory extends React.Component {
         }
 
         // One pie chart per year's data
-        const graphs = [];
+        let graphs = [];
         for (year in tmp) {
           const containerId = randomId();
           const title = [this.props.title, year].join(" -- ");

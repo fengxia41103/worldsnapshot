@@ -155,6 +155,7 @@ class ItemList extends React.Component {
     });
 
     const id = FAKED_PREFIX + activeIndex;
+
     return (
       <div>
         <h3 id={id}>{activeIndex}</h3>

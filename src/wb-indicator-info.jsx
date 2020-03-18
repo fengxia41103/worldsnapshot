@@ -1,5 +1,6 @@
 import React from "react";
 import * as ReactBootstrap from "react-bootstrap";
+import {isEmpty} from "lodash";
 import AjaxContainer from "./ajax.jsx";
 
 var Modal = require("react-bootstrap").Modal;
@@ -43,6 +44,8 @@ class WbIndicatorInfo extends React.Component {
   }
 
   render() {
+    if (isEmpty(this.props.indicator)) return null;
+
     // Get items to list
     if (
       typeof this.state.info == "undefined" ||
