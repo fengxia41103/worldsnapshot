@@ -41,7 +41,7 @@
     "react-dom": "^15.3.2",
     "react-toolbox": "^1.2.3",
     "reveal": "0.0.4",
-    "reveal.js": "^3.3.0",
+    "reveal.js": "^4.3.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.14.0",
