@@ -1,65 +1,36 @@
-# emacs
-[.#]*
-*.autosave
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
+# dependencies
+**/node_modules
+# roadhog-api-doc ignore
+/src/utils/request-temp.js
+_roadhog-api-doc
 
-# C extensions
-*.so
+# production
+/.vscode
 
-# Distribution / packaging
-.Python
-output/
-env/
-build/
-develop-eggs/
-dist/
-eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+# misc
+.DS_Store
+npm-debug.log*
+yarn-error.log
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+/coverage
+.idea
+yarn.lock
+package-lock.json
+*bak
+.vscode
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
+# visual studio code
+.history
 *.log
+functions/*
+lambda/mock/index.js
+.temp/**
 
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# sublime text
-*.sublime-project
-*.sublime-workspace
-
-# sensitive configs
-production_envvars.py
+# screenshot
+screenshot
+.firebase
+sonar-project.properties
+.scannerwork/.sonar_lock
+.scannerwork/report-task.txt

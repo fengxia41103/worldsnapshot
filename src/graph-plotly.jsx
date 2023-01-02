@@ -1,8 +1,9 @@
-import React from "react";
-import Plotly from "plotly.js";
-import _ from "lodash";
 import classNames from "classnames";
-import {randomId, randomColorGenerator} from "./helper.jsx";
+import _ from "lodash";
+import Plotly from "plotly.js-dist";
+import React from "react";
+
+import { randomColorGenerator, randomId } from "./helper.jsx";
 
 //****************************************
 //
@@ -27,7 +28,7 @@ class PlotlyGraphBox extends React.Component {
 
     // Cleanse data, Plotly builds some details, such as
     // chart type, in each data point.
-    const dataWithType = data.series.map(d => {
+    const dataWithType = data.series.map((d) => {
       d.type = type;
       switch (type) {
         case "scatter":
@@ -95,12 +96,12 @@ class PlotlyGraphBox extends React.Component {
 
     // Set up data updater
     const that = this;
-    this.debounceUpdate = _.debounce(data => {
+    this.debounceUpdate = _.debounce((data) => {
       that._makeViz();
     }, 1000);
 
     // Set up graph type updater
-    this.debounceGraphTypeUpdate = _.debounce(type => {
+    this.debounceGraphTypeUpdate = _.debounce((type) => {
       that._makeViz();
     }, 500);
   }
@@ -139,7 +140,7 @@ class PlotlyGraphBox extends React.Component {
       <div>
         <figure>
           <figcaption>{this.props.title}</figcaption>
-          <div id={this.props.containerId} style={{minHeight: "500px"}} />
+          <div id={this.props.containerId} style={{ minHeight: "500px" }} />
         </figure>
       </div>
     );
