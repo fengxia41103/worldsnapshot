@@ -41,42 +41,6 @@
         "commonjs": true
       }
     ],
-    "import/order": [
-      "error",
-      {
-        "alphabetize": {
-          "caseInsensitive": true,
-          "order": "asc"
-        },
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          ["index", "sibling"],
-          "object"
-        ],
-        "newlines-between": "always",
-        "pathGroups": [
-          {
-            "group": "external",
-            "pattern": "@mui/**",
-            "position": "after"
-          },
-          {
-            "group": "external",
-            "pattern": "@fengxia41103/**",
-            "position": "after"
-          },
-          {
-            "group": "internal",
-            "pattern": "@(Views|Components|Layouts|Utils)",
-            "position": "after"
-          }
-        ],
-        "pathGroupsExcludedImportTypes": []
-      }
-    ],
     "import/unambiguous": "off",
     "no-console": [
       "error",
