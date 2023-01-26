@@ -11,6 +11,7 @@ module.exports = {
       "@Views": path.resolve(__dirname, "src/views"),
       "@Layouts": path.resolve(__dirname, "src/layouts"),
       "@Utils": path.resolve(__dirname, "src/utils"),
+      "@Models": path.resolve(__dirname, "src/models"),
     },
 
     plugins: [

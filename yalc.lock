@@ -2,8 +2,7 @@
   "version": "v1",
   "packages": {
     "@fengxia41103/storybook": {
-      "signature": "ed2dc918014e8e0d51f0225a999657ef",
-      "file": true,
+      "signature": "b5c823da7f23bbe4d85b94b4d523fb3f",
       "replaced": "1.1.0-dev.2"
     }
   }

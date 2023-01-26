@@ -1,16 +1,20 @@
 import React from "react";
-import "react-perfect-scrollbar/dist/css/styles.css";
+import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import "@/App.css";
-import GlobalContext from "@/context";
 import routes from "@/routes";
+
+import GlobalStore from "@Models/store";
 
 const App = () => {
   // goto where
   const router = createBrowserRouter(routes);
 
-  return <RouterProvider router={router} />;
+  return (
+    <Provider store={GlobalStore}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
 };
 
 export default App;
