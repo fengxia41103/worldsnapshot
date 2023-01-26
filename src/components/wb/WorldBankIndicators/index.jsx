@@ -1,10 +1,10 @@
-import { countBy } from "lodash";
+import { countBy, map } from "lodash";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Grid, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
-import { CountCards } from "@fengxia41103/storybook";
+import { CountTable } from "@fengxia41103/storybook";
 
 import ShowResource from "@Components/common/ShowResource";
 
@@ -23,16 +23,16 @@ const WorldBankIndicators = () => {
     // update store
     dispatch(setIndicators(indicators));
 
+    const countBySource = countBy(indicators, (x) => x.source.value);
+
     return (
       <>
-        <Typography variant="h1">{total} indicators</Typography>
-        <Grid container spacing={1}>
-          <CountCards
-            data={indicators}
-            count_by_lambda={(x) => x.source.value}
-            title="Count by Source"
-          />
-        </Grid>
+        <CountTable
+          data={indicators}
+          count_by_lambda={(x) => x.source.value}
+          title="Count by Source"
+        />
+        <Typography variant="h1">Total: {total} indicators</Typography>
       </>
     );
   };
