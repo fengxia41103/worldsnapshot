@@ -6,14 +6,12 @@ export const wbSlice = createSlice({
     indicators: [],
   },
   reducers: {
-    setIndicators: (state, action) => ({
-      ...state,
-      indicators: action.payload,
-    }),
+    setIndicators: (state, action) => {
+      state.indicators = action.payload;
+    },
   },
 });
 
-// Action creators are generated for each case reducer function
 export const { setIndicators } = wbSlice.actions;
 
 export const WorldBankReducer = wbSlice.reducer;

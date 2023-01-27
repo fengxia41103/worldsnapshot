@@ -12,14 +12,15 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import { NotFoundView } from "@fengxia41103/storybook";
 
 import WorldBankIndicators from "@Components/wb/WorldBankIndicators";
+import WorldBankIndicatorsBySource from "@Components/wb/WorldBankIndicatorsBySource";
 
 import MainLayout from "@Layouts/MainLayout";
 
 const navbar_items = [
   {
-    href: "/dashboard",
+    href: "/sources",
     icon: <DashboardIcon />,
-    title: "Today",
+    title: "Sources",
   },
   {
     href: "/trending",
@@ -59,10 +60,14 @@ const routes = [
     path: "/",
     element: <MainLayout sideNavs={navbar_items} />,
     children: [
-      { path: "/wb", element: <WorldBankIndicators /> },
+      {
+        path: "sources",
+        element: <WorldBankIndicators />,
+      },
+      { path: "sources/:source", element: <WorldBankIndicatorsBySource /> },
 
       // landing page, default to dashboard
-      { path: "/", element: <Navigate to="/wb" /> },
+      { path: "/", element: <Navigate to="/sources" /> },
     ],
   },
 
