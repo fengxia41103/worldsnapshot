@@ -18,11 +18,7 @@ import { HighchartGraph } from "@fengxia41103/storybook";
 import ShowResource from "@Components/common/ShowResource";
 
 const WorldBankGraph = (props) => {
-  const { countryCode = "AF" } = useParams();
-
-  const { start = "1960", end = "2023" } = props;
-
-  const [indicator, setIndicator] = useState("1.1_TOTAL.FINAL.ENERGY.CONSUM");
+  const { countryCode, indicator, start = "1960", end = "2023" } = props;
 
   const getUrl = () => {
     // Build DHS API url
@@ -82,6 +78,8 @@ const WorldBankGraph = (props) => {
 };
 
 WorldBankGraph.propTypes = {
+  countryCode: PropTypes.string.isRequired,
+  indicator: PropTypes.string.isRequired,
   start: PropTypes.string,
   end: PropTypes.string,
 };
