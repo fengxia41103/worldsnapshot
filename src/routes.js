@@ -11,6 +11,7 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
 import { NotFoundView } from "@fengxia41103/storybook";
 
+import WorldBankCountryList from "@Components/wb/WorldBankCountryList";
 import WorldBankIndicatorList from "@Components/wb/WorldBankIndicatorList";
 import WorldBankSourceIndicatorList from "@Components/wb/WorldBankSourceIndicatorList";
 
@@ -18,14 +19,14 @@ import MainLayout from "@Layouts/MainLayout";
 
 const navbar_items = [
   {
-    href: "/sources",
+    href: "/indicators",
     icon: <DashboardIcon />,
-    title: "Sources",
+    title: "Indicators",
   },
   {
-    href: "/trending",
+    href: "/countries",
     icon: <TrendingUpIcon />,
-    title: "Price Trending",
+    title: "Countries",
   },
   {
     href: "/stocks",
@@ -65,6 +66,11 @@ const routes = [
         element: <WorldBankIndicatorList />,
       },
       { path: "sources/:source", element: <WorldBankSourceIndicatorList /> },
+
+      {
+        path: "countries",
+        element: <WorldBankCountryList />,
+      },
 
       // landing page, default to dashboard
       { path: "/", element: <Navigate to="/sources" /> },
