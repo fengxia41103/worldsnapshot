@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 
 import { CountTable } from "@fengxia41103/storybook";
 
-const WorldBankIndicators = () => {
+const WorldBankIndicatorList = () => {
   const indicators = useSelector((state) => state.wb.indicators);
 
   return (
@@ -21,4 +21,4 @@ const WorldBankIndicators = () => {
   );
 };
 
-export default WorldBankIndicators;
+export default WorldBankIndicatorList;
