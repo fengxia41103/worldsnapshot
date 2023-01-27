@@ -11,8 +11,8 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
 import { NotFoundView } from "@fengxia41103/storybook";
 
-import WorldBankIndicators from "@Components/wb/WorldBankIndicators";
-import WorldBankIndicatorsBySource from "@Components/wb/WorldBankIndicatorsBySource";
+import WorldBankIndicatorList from "@Components/wb/WorldBankIndicatorList";
+import WorldBankSourceIndicatorList from "@Components/wb/WorldBankSourceIndicatorList";
 
 import MainLayout from "@Layouts/MainLayout";
 
@@ -62,12 +62,14 @@ const routes = [
     children: [
       {
         path: "sources",
-        element: <WorldBankIndicators />,
+        element: <WorldBankIndicatorList />,
       },
-      { path: "sources/:source", element: <WorldBankIndicatorsBySource /> },
+      { path: "sources/:source", element: <WorldBankSourceIndicatorList /> },
 
       // landing page, default to dashboard
       { path: "/", element: <Navigate to="/sources" /> },
+
+      { path: "404", element: <NotFoundView /> },
     ],
   },
 

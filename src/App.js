@@ -4,24 +4,37 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import routes from "@/routes";
 
-import { setIndicators } from "@Models/worldbank";
+import { setCountries, setIndicators } from "@Models/worldbank";
 
 const App = () => {
   const dispatch = useDispatch();
-  const API =
+
+  const COUNTRIES_API =
+    "http://api.worldbank.org/v2/en/countries?format=json&per_page=1000";
+  const INDICATORS_API =
     "http://api.worldbank.org/v2/indicators?format=json&per_page=17000";
 
   useEffect(() => {
-    fetch(API)
+    // get countries
+    fetch(COUNTRIES_API)
       .then((response) => response.json())
       .then((data) => {
-        const [summary, indicators] = data;
-        const { total } = summary;
+        const [, countries] = data;
+
+        // update store
+        dispatch(setCountries(countries));
+      });
+
+    // get indicators
+    fetch(INDICATORS_API)
+      .then((response) => response.json())
+      .then((data) => {
+        const [, indicators] = data;
 
         // update store
         dispatch(setIndicators(indicators));
       });
-  }, [API]);
+  }, [INDICATORS_API, COUNTRIES_API]);
 
   // goto where
   const router = createBrowserRouter(routes);
