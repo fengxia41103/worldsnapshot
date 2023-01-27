@@ -16,7 +16,11 @@ export const wbSlice = createSlice({
     },
 
     setIndicators: (state, action) => {
-      state.indicators = action.payload;
+      // we map `sourceNote` to new key `description`
+      state.indicators = action.payload.map((x) => ({
+        ...x,
+        description: x.sourceNote,
+      }));
       state.indicatorTotal = action.payload.length;
     },
   },

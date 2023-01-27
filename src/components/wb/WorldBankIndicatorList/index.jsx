@@ -13,10 +13,12 @@ const WorldBankIndicatorList = () => {
       <CountTable
         data={indicators}
         count_by_lambda={(x) => x.source.value}
-        title="Count by Source"
+        title="Indicators by Source"
         link_to_base="/sources"
       />
-      <Typography variant="h1">Total: {100} indicators</Typography>
+      <Typography variant="h1">
+        Total: {indicators.length} indicators
+      </Typography>
     </Box>
   );
 };
