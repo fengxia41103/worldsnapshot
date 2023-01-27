@@ -11,8 +11,8 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
 import { NotFoundView } from "@fengxia41103/storybook";
 
+import WorldBankCountryDetail from "@Components/wb/WorldBankCountryDetail";
 import WorldBankCountryList from "@Components/wb/WorldBankCountryList";
-import WorldBankGraph from "@Components/wb/WorldBankGraph";
 import WorldBankIndicatorList from "@Components/wb/WorldBankIndicatorList";
 import WorldBankSourceIndicatorList from "@Components/wb/WorldBankSourceIndicatorList";
 
@@ -75,7 +75,7 @@ const routes = [
 
       {
         path: "countries/:countryCode",
-        element: <WorldBankGraph />,
+        element: <WorldBankCountryDetail />,
       },
 
       // landing page, default to dashboard
