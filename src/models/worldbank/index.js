@@ -8,6 +8,9 @@ export const wbSlice = createSlice({
 
     indicatorTotal: 0,
     indicators: [],
+
+    activeCountries: ["USA", "AUS"],
+    activeData: [],
   },
   reducers: {
     setCountries: (state, action) => {
@@ -23,9 +26,24 @@ export const wbSlice = createSlice({
       }));
       state.indicatorTotal = action.payload.length;
     },
+
+    setActiveData: (state, action) => {
+      const { countryCode, indicator, data } = action.payload;
+
+      const { activeData } = state;
+
+      state.activeData = [
+        ...activeData,
+        {
+          countryCode,
+          indicator,
+          data,
+        },
+      ];
+    },
   },
 });
 
-export const { setCountries, setIndicators } = wbSlice.actions;
+export const { setCountries, setIndicators, setActiveData } = wbSlice.actions;
 
 export const WorldBankReducer = wbSlice.reducer;

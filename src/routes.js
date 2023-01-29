@@ -14,13 +14,14 @@ import { NotFoundView } from "@fengxia41103/storybook";
 import WorldBankCountryDetail from "@Components/wb/WorldBankCountryDetail";
 import WorldBankCountryList from "@Components/wb/WorldBankCountryList";
 import WorldBankIndicatorList from "@Components/wb/WorldBankIndicatorList";
-import WorldBankSourceIndicatorList from "@Components/wb/WorldBankSourceIndicatorList";
+import WorldBankIndicatorListBySource from "@Components/wb/WorldBankIndicatorListBySource";
+import WorldBankIndicatorListByTopic from "@Components/wb/WorldBankIndicatorListByTopic";
 
 import MainLayout from "@Layouts/MainLayout";
 
 const navbar_items = [
   {
-    href: "/sources",
+    href: "/indicators",
     icon: <DashboardIcon />,
     title: "Indicators",
   },
@@ -63,10 +64,11 @@ const routes = [
     element: <MainLayout sideNavs={navbar_items} />,
     children: [
       {
-        path: "sources",
+        path: "indicators",
         element: <WorldBankIndicatorList />,
       },
-      { path: "sources/:source", element: <WorldBankSourceIndicatorList /> },
+      { path: "sources/:source", element: <WorldBankIndicatorListBySource /> },
+      { path: "topics/:topic", element: <WorldBankIndicatorListByTopic /> },
 
       {
         path: "countries",
@@ -79,7 +81,7 @@ const routes = [
       },
 
       // landing page, default to dashboard
-      { path: "/", element: <Navigate to="/sources" /> },
+      { path: "/", element: <Navigate to="/indicators" /> },
 
       { path: "404", element: <NotFoundView /> },
     ],

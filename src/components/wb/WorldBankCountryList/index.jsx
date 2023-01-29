@@ -42,7 +42,7 @@ const WorldBankCountryList = () => {
     </FormControl>
   );
 
-  const groupByRegion = groupBy(countries, (x) => {
+  const afterGroupBy = groupBy(countries, (x) => {
     switch (group) {
       case "name":
         return x.name.charAt(0);
@@ -51,7 +51,7 @@ const WorldBankCountryList = () => {
     }
   });
 
-  const list = map(groupByRegion, (items, group) => {
+  const list = map(afterGroupBy, (items, group) => {
     const tmp = items.map((i) => (
       <Grid item key={i.id}>
         <Link href={`/countries/${i.iso2Code}`}>
