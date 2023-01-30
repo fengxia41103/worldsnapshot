@@ -54,7 +54,8 @@ const WorldBankIndicatorList = () => {
         data={indicators}
         count_by_lambda={getGroupBy}
         title={`Indicators by ${group}`}
-        link_to_base={`${group}s`}
+        // MUST: appending a trailing "s"!
+        link_to_base={`/${group}s`}
       />
       <Typography variant="h1">
         Total: {indicators.length} indicators

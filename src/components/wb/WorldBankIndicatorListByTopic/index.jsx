@@ -16,14 +16,18 @@ const WorldBankIndicatorListByTopic = () => {
   const indicators = useSelector((state) => state.wb.indicators);
 
   const myIndicators = indicators
+    // only matching the topic I want
     .filter((x) => x.topics?.[0]?.value === topic)
 
     .map((x) => ({
       ...x,
+
+      // a countries comparison graph on this indicator
       more: <WorldBankIndicatorDetail indicator={x.id} />,
     }));
 
   const groupByFirstLetter = groupBy(myIndicators, (x) =>
+    // the `.name` string sometimes have prefix whitespace!
     x.name.trim().charAt(0),
   );
 
