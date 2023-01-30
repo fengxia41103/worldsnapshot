@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import { useSelector } from "react-redux";
 
+import { Box } from "@mui/material";
+
 import { HighchartGraph } from "@fengxia41103/storybook";
 
 const WorldBankGraph = (props) => {
@@ -27,19 +29,20 @@ const WorldBankGraph = (props) => {
   // Render graphs
   const footer = "Source: The World Bank";
   return (
-    <HighchartGraph
-      title=""
-      type="column"
-      categories={categories}
-      data={chartData}
-      footer={footer}
-      legendEnabled
-    />
+    <Box sx={{ width: 1 }}>
+      <HighchartGraph
+        title=""
+        type="column"
+        categories={categories}
+        data={chartData}
+        footer={footer}
+        legendEnabled
+      />
+    </Box>
   );
 };
 
 WorldBankGraph.propTypes = {
-  countryCode: PropTypes.string.isRequired,
   indicator: PropTypes.string.isRequired,
   data: PropTypes.arrayOf(
     PropTypes.shape({
