@@ -155,7 +155,7 @@ const WorldBankCountryDetail = () => {
           title={<GlossaryDT term={name} description={description} />}
         />
         <CardContent>
-          <WorldBankGraph {...{ countryCode, indicator }} />
+          <WorldBankGraph {...{ indicator }} />
         </CardContent>
       </Card>
     );

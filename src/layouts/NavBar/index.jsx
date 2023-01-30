@@ -8,7 +8,7 @@ import { makeStyles } from "@mui/styles";
 
 import GlobalContext from "@/context";
 
-import NavItem from "@Layouts/NavBarItem";
+import NavBarItem from "@Layouts/NavBarItem";
 
 const myStyles = makeStyles(() => ({
   mobileDrawer: {
@@ -43,7 +43,7 @@ const NavBar = ({ onMobileClose, openMobile, items }) => {
       <Box p={2}>
         <List>
           {items.map((item) => (
-            <NavItem
+            <NavBarItem
               key={item.title}
               href={item.href}
               title={item.title}

@@ -1,6 +1,7 @@
 import { groupBy, map } from "lodash";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import {
   Box,
@@ -17,10 +18,14 @@ import {
 
 import { CountTable, DropdownMenu } from "@fengxia41103/storybook";
 
+import { addActiveCountry } from "@Models/worldbank";
+
 const WorldBankCountryList = () => {
   const [group, setGroup] = useState("name");
 
   const countries = useSelector((state) => state.wb.countries);
+  const activeCountries = useSelector((state) => state.wb.activeCountries);
+  const dispatch = useDispatch();
 
   const group_by_change = (event) => {
     setGroup(event.target.value);
@@ -51,14 +56,23 @@ const WorldBankCountryList = () => {
     }
   });
 
-  const list = map(afterGroupBy, (items, group) => {
-    const tmp = items.map((i) => (
+  const setCountryActive = (countryCode) => {
+    dispatch(addActiveCountry(countryCode));
+  };
+
+  const list = map(afterGroupBy, (countriesInGroup, group) => {
+    const tmp = countriesInGroup.map((i) => (
       <Grid item key={i.id}>
-        <Link href={`/countries/${i.iso2Code}`}>
-          <Chip label={i.name} />
+        <Link onClick={() => setCountryActive(i.id)}>
+          <Chip
+            label={i.name}
+            variant={activeCountries.includes(i.id) ? "contained" : "outlined"}
+            color={activeCountries.includes(i.id) ? "secondary" : "info"}
+          />
         </Link>
       </Grid>
     ));
+
     return (
       <Box key={group} mb={3}>
         <Typography variant="h1" mb={3}>
