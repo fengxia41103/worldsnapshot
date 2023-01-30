@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import { Button, Icon, ListItem } from "@mui/material";
+import { Icon, ListItem } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
 const myStyles = makeStyles((theme) => ({
@@ -37,25 +37,30 @@ const myStyles = makeStyles((theme) => ({
   },
 }));
 
-const NavItem = (props) => {
+const NavBarItem = (props) => {
   const { href, icon, title } = props;
 
   const classes = myStyles();
 
+  const activeClassName = "underline";
+
   return (
     <ListItem className={classes.item} disableGutters>
-      <Button className={classes.button} component={NavLink} to={href}>
+      <NavLink
+        to={href}
+        className={({ isActive }) => (isActive ? activeClassName : undefined)}
+      >
         {icon && <Icon className={classes.icon} size="20" />}
         <span className={classes.title}>{title}</span>
-      </Button>
+      </NavLink>
     </ListItem>
   );
 };
 
-NavItem.propTypes = {
+NavBarItem.propTypes = {
   href: PropTypes.string,
   icon: PropTypes.node,
   title: PropTypes.string,
 };
 
-export default NavItem;
+export default NavBarItem;
