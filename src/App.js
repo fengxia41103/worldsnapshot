@@ -12,7 +12,7 @@ const App = () => {
   const COUNTRIES_API =
     "http://api.worldbank.org/v2/en/countries?format=json&per_page=1000";
   const INDICATORS_API =
-    "http://api.worldbank.org/v2/indicators?format=json&per_page=17000";
+    "http://api.worldbank.org/v2/indicators?format=json&per_page=100";
 
   useEffect(() => {
     // get countries

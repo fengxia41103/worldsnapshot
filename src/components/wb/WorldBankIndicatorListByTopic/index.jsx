@@ -17,7 +17,8 @@ const WorldBankIndicatorListByTopic = () => {
 
   const myIndicators = indicators
     // only matching the topic I want
-    .filter((x) => x.topics?.[0]?.value === topic)
+    // MUST: topic string can have trailing whitespace! err!
+    .filter((x) => map(x.topics, (t) => t.value?.trim()).includes(topic))
 
     .map((x) => ({
       ...x,
