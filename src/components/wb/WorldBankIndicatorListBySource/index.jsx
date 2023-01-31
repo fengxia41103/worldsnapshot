@@ -9,13 +9,17 @@ import { Glossary } from "@fengxia41103/storybook";
 
 import WorldBankIndicatorDetail from "@Components/wb/WorldBankIndicatorDetail";
 
+import { selectFilteredIndicators } from "@Models/worldbank";
+
 const WorldBankIndicatorListBySource = () => {
   // URL params
   const { source } = useParams();
 
-  const indicators = useSelector((state) => state.wb.indicators);
+  const filteredIndicators = useSelector((state) =>
+    selectFilteredIndicators(state),
+  );
 
-  const myIndicators = indicators
+  const myIndicators = filteredIndicators
     .filter((x) => x.source.value === source)
     .map((x) => ({
       ...x,

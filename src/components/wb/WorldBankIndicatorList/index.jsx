@@ -1,5 +1,6 @@
+import { every, isEmpty } from "lodash";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Box,
@@ -14,22 +15,32 @@ import {
 } from "@mui/material";
 
 import {
+  ChipListWithClickToggle,
   CountTable,
   DropdownMenu,
   SearchTextInput,
 } from "@fengxia41103/storybook";
 
+import {
+  selectFilteredIndicators,
+  toggleIndicatorFilterKeyword,
+} from "@Models/worldbank";
+
 const WorldBankIndicatorList = () => {
   const [group, setGroup] = useState("source");
   const [searching, setSearching] = useState("");
+
+  const dispatch = useDispatch();
 
   const group_by_change = (event) => {
     setGroup(event.target.value);
   };
 
   const search_filter_change = (event) => {
-    const tmp = event.target.value.trim().toUpperCase();
-    setSearching(tmp);
+    const keyword = event.target.value.trim().toUpperCase();
+    setSearching(keyword);
+
+    dispatch(toggleIndicatorFilterKeyword(keyword));
   };
 
   const menu = (
@@ -49,11 +60,14 @@ const WorldBankIndicatorList = () => {
   );
 
   const indicators = useSelector((state) => state.wb.indicators);
-  const filteredIndicators = indicators.filter(
-    (indicator) =>
-      indicator.name.toUpperCase().includes(searching) ||
-      indicator.sourceNote.toUpperCase().includes(searching),
+  const indicatorFilterKeywords = useSelector(
+    (state) => state.wb.indicatorFilterKeywords,
   );
+
+  const filteredIndicators = useSelector((state) =>
+    selectFilteredIndicators(state),
+  );
+
   const getGroupBy = (x) => {
     switch (group) {
       case "source":
@@ -63,9 +77,26 @@ const WorldBankIndicatorList = () => {
     }
   };
 
+  const keywordClickHandler = (keyword) => {
+    dispatch(toggleIndicatorFilterKeyword(keyword));
+  };
+
+  const activeKeywordList = (
+    <ChipListWithClickToggle
+      fullList={indicatorFilterKeywords.map((keyword) => ({
+        id: keyword,
+        name: keyword,
+      }))}
+      activeList={indicatorFilterKeywords}
+      onClick={keywordClickHandler}
+    />
+  );
+
   return (
     <Box>
+      {activeKeywordList}
       <SearchTextInput
+        debounceTimeout={600}
         title="Filter by Country Name"
         searching={searching}
         searchChangeHandler={search_filter_change}

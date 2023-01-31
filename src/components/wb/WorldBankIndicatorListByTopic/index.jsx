@@ -9,13 +9,17 @@ import { Glossary } from "@fengxia41103/storybook";
 
 import WorldBankIndicatorDetail from "@Components/wb/WorldBankIndicatorDetail";
 
+import { selectFilteredIndicators } from "@Models/worldbank";
+
 const WorldBankIndicatorListByTopic = () => {
   // URL params
   const { topic } = useParams();
 
-  const indicators = useSelector((state) => state.wb.indicators);
+  const filteredIndicators = useSelector((state) =>
+    selectFilteredIndicators(state),
+  );
 
-  const myIndicators = indicators
+  const myIndicators = filteredIndicators
     // only matching the topic I want
     // MUST: topic string can have trailing whitespace! err!
     .filter((x) => map(x.topics, (t) => t.value?.trim()).includes(topic))
