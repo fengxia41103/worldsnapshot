@@ -12,16 +12,18 @@ import {
   Grid,
   Radio,
   RadioGroup,
+  Stack,
   Typography,
 } from "@mui/material";
 
 import {
+  ChipListWithClickToggle,
   CountTable,
   DropdownMenu,
   SearchTextInput,
 } from "@fengxia41103/storybook";
 
-import { addActiveCountry } from "@Models/worldbank";
+import { toggleActiveCountry } from "@Models/worldbank";
 
 const WorldBankCountryList = () => {
   const [group, setGroup] = useState("name");
@@ -70,23 +72,13 @@ const WorldBankCountryList = () => {
     },
   );
 
-  const setCountryActive = (countryCode) => {
-    dispatch(addActiveCountry(countryCode));
+  const countryClickHandler = (countryCode) => {
+    dispatch(toggleActiveCountry(countryCode));
   };
 
   const sortedIndexes = keys(afterGroupBy).sort();
   const list = map(sortedIndexes, (group) => {
     const countriesInGroup = afterGroupBy[group];
-    const tmp = countriesInGroup.map((i) => (
-      <Grid item key={i.id}>
-        <Chip
-          label={i.name}
-          variant={activeCountries.includes(i.id) ? "contained" : "outlined"}
-          color={activeCountries.includes(i.id) ? "secondary" : "info"}
-          onClick={() => setCountryActive(i.id)}
-        />
-      </Grid>
-    ));
 
     return (
       <Box key={group} mb={3}>
@@ -94,21 +86,39 @@ const WorldBankCountryList = () => {
           {group}
         </Typography>
 
-        <Grid container spacing={1}>
-          {tmp}
-        </Grid>
+        <ChipListWithClickToggle
+          fullList={countriesInGroup}
+          activeList={activeCountries}
+          onClick={countryClickHandler}
+        />
       </Box>
     );
   });
+
+  const activeList = (
+    <ChipListWithClickToggle
+      fullList={activeCountries.map((country) => ({
+        id: country,
+        name: countries.filter((c) => c.id === country)[0]?.name,
+      }))}
+      activeList={activeCountries}
+      onClick={countryClickHandler}
+    />
+  );
+
   return (
     <>
+      <Stack direction="row" alignItems="center">
+        {activeList}
+        <DropdownMenu content={menu} />
+      </Stack>
+
       <SearchTextInput
         title="Filter by Country Name"
         searching={searching}
         searchChangeHandler={search_filter_change}
       />
 
-      <DropdownMenu content={menu} />
       {list}
     </>
   );

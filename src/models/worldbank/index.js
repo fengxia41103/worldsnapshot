@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { uniq } from "lodash";
+import { remove, uniq } from "lodash";
 
 export const wbSlice = createSlice({
   name: "wb",
@@ -46,17 +46,27 @@ export const wbSlice = createSlice({
       ];
     },
 
-    // add a country code to `activeCountries` list
-    addActiveCountry: (state, action) => {
+    // add or remove a country code to `activeCountries` list
+    toggleActiveCountry: (state, action) => {
       const { activeCountries: existing } = state;
-      const { payload: countryCode } = action;
+      const { payload: newCountryCode } = action;
 
-      state.activeCountries = uniq([...existing, countryCode]);
+      if (existing.includes(newCountryCode)) {
+        // if it's in existing, remove it
+        state.activeCountries = existing.filter((x) => x !== newCountryCode);
+      } else {
+        // add to list
+        state.activeCountries = uniq([...existing, newCountryCode]);
+      }
     },
   },
 });
 
-export const { setCountries, setIndicators, setActiveData, addActiveCountry } =
-  wbSlice.actions;
+export const {
+  setCountries,
+  setIndicators,
+  setActiveData,
+  toggleActiveCountry,
+} = wbSlice.actions;
 
 export const WorldBankReducer = wbSlice.reducer;

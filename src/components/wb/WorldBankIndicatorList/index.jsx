@@ -9,16 +9,27 @@ import {
   Grid,
   Radio,
   RadioGroup,
+  Stack,
   Typography,
 } from "@mui/material";
 
-import { CountTable, DropdownMenu } from "@fengxia41103/storybook";
+import {
+  CountTable,
+  DropdownMenu,
+  SearchTextInput,
+} from "@fengxia41103/storybook";
 
 const WorldBankIndicatorList = () => {
   const [group, setGroup] = useState("source");
+  const [searching, setSearching] = useState("");
 
   const group_by_change = (event) => {
     setGroup(event.target.value);
+  };
+
+  const search_filter_change = (event) => {
+    const tmp = event.target.value.trim().toUpperCase();
+    setSearching(tmp);
   };
 
   const menu = (
@@ -38,6 +49,11 @@ const WorldBankIndicatorList = () => {
   );
 
   const indicators = useSelector((state) => state.wb.indicators);
+  const filteredIndicators = indicators.filter(
+    (indicator) =>
+      indicator.name.toUpperCase().includes(searching) ||
+      indicator.sourceNote.toUpperCase().includes(searching),
+  );
   const getGroupBy = (x) => {
     switch (group) {
       case "source":
@@ -49,9 +65,16 @@ const WorldBankIndicatorList = () => {
 
   return (
     <Box>
+      <SearchTextInput
+        title="Filter by Country Name"
+        searching={searching}
+        searchChangeHandler={search_filter_change}
+      />
+
       <DropdownMenu content={menu} />
+
       <CountTable
-        data={indicators}
+        data={filteredIndicators}
         count_by_lambda={getGroupBy}
         title={`Indicators by ${group}`}
         // MUST: appending a trailing "s"!
