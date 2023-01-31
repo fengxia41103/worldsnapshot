@@ -1,4 +1,4 @@
-import { groupBy, map } from "lodash";
+import { groupBy, keys, map } from "lodash";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -10,25 +10,35 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
-  Link,
   Radio,
   RadioGroup,
   Typography,
 } from "@mui/material";
 
-import { CountTable, DropdownMenu } from "@fengxia41103/storybook";
+import {
+  CountTable,
+  DropdownMenu,
+  SearchTextInput,
+} from "@fengxia41103/storybook";
 
 import { addActiveCountry } from "@Models/worldbank";
 
 const WorldBankCountryList = () => {
   const [group, setGroup] = useState("name");
+  const [searching, setSearching] = useState("");
 
+  // redux
   const countries = useSelector((state) => state.wb.countries);
   const activeCountries = useSelector((state) => state.wb.activeCountries);
   const dispatch = useDispatch();
 
   const group_by_change = (event) => {
     setGroup(event.target.value);
+  };
+
+  const search_filter_change = (event) => {
+    const tmp = event.target.value.trim().toUpperCase();
+    setSearching(tmp);
   };
 
   const menu = (
@@ -47,29 +57,34 @@ const WorldBankCountryList = () => {
     </FormControl>
   );
 
-  const afterGroupBy = groupBy(countries, (x) => {
-    switch (group) {
-      case "name":
-        return x.name.charAt(0);
-      case "region":
-        return x.region.value;
-    }
-  });
+  const afterGroupBy = groupBy(
+    // filter by partial searching
+    countries.filter((x) => x.name.toUpperCase().includes(searching)),
+    (x) => {
+      switch (group) {
+        case "name":
+          return x.name.charAt(0);
+        case "region":
+          return x.region.value;
+      }
+    },
+  );
 
   const setCountryActive = (countryCode) => {
     dispatch(addActiveCountry(countryCode));
   };
 
-  const list = map(afterGroupBy, (countriesInGroup, group) => {
+  const sortedIndexes = keys(afterGroupBy).sort();
+  const list = map(sortedIndexes, (group) => {
+    const countriesInGroup = afterGroupBy[group];
     const tmp = countriesInGroup.map((i) => (
       <Grid item key={i.id}>
-        <Link onClick={() => setCountryActive(i.id)}>
-          <Chip
-            label={i.name}
-            variant={activeCountries.includes(i.id) ? "contained" : "outlined"}
-            color={activeCountries.includes(i.id) ? "secondary" : "info"}
-          />
-        </Link>
+        <Chip
+          label={i.name}
+          variant={activeCountries.includes(i.id) ? "contained" : "outlined"}
+          color={activeCountries.includes(i.id) ? "secondary" : "info"}
+          onClick={() => setCountryActive(i.id)}
+        />
       </Grid>
     ));
 
@@ -87,6 +102,12 @@ const WorldBankCountryList = () => {
   });
   return (
     <>
+      <SearchTextInput
+        title="Filter by Country Name"
+        searching={searching}
+        searchChangeHandler={search_filter_change}
+      />
+
       <DropdownMenu content={menu} />
       {list}
     </>

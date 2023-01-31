@@ -18,7 +18,9 @@ const WorldBankIndicatorDetail = (props) => {
     const baseUrl = "http://api.worldbank.org/v2/en/countries/";
     const query = `?date=${start}:${end}&format=json&per_page=1000`;
 
-    return `${baseUrl}${countryCode}/indicators/${indicator}${query}`;
+    return `${baseUrl}${countryCode}/indicators/${encodeURI(
+      indicator,
+    )}${query}`;
   };
 
   const isExisting = (countryCode, indicator) => {
