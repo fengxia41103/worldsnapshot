@@ -7,7 +7,9 @@ import { Box, Typography } from "@mui/material";
 
 import { Glossary } from "@fengxia41103/storybook";
 
+import WorldBankActiveCountryList from "@Components/wb/WorldBankActiveCountryList";
 import WorldBankIndicatorDetail from "@Components/wb/WorldBankIndicatorDetail";
+import WorldBankIndicatorFilterKeywordList from "@Components/wb/WorldBankIndicatorFilterKeywordList";
 
 import { selectFilteredIndicators } from "@Models/worldbank";
 
@@ -46,6 +48,9 @@ const WorldBankIndicatorListByTopic = () => {
 
   return (
     <Box>
+      <WorldBankActiveCountryList />
+      <WorldBankIndicatorFilterKeywordList />
+
       <Typography variant="h1">{topic}</Typography>
 
       <Glossary terms={terms} />
