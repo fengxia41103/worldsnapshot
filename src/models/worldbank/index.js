@@ -109,6 +109,17 @@ export const selectFilteredIndicators = createSelector(
   },
 );
 
+const selectCountries = (state) => state.wb.countries;
+const selectActiveCountryIDs = (state) => state.wb.activeCountries;
+export const selectActiveCountries = createSelector(
+  selectCountries,
+  selectActiveCountryIDs,
+  (countries, activeCountryIDs) => {
+    console.log(countries, activeCountryIDs);
+    return countries.filter((c) => activeCountryIDs.includes(c.id));
+  },
+);
+
 export const {
   setCountries,
   setIndicators,

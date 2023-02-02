@@ -23,6 +23,8 @@ import {
   SearchTextInput,
 } from "@fengxia41103/storybook";
 
+import WorldBankActiveCountryList from "@Components/wb/WorldBankActiveCountryList";
+
 import { toggleActiveCountry } from "@Models/worldbank";
 
 const WorldBankCountryList = () => {
@@ -95,21 +97,10 @@ const WorldBankCountryList = () => {
     );
   });
 
-  const activeList = (
-    <ChipListWithClickToggle
-      fullList={activeCountries.map((country) => ({
-        id: country,
-        name: countries.filter((c) => c.id === country)[0]?.name,
-      }))}
-      activeList={activeCountries}
-      onClick={countryClickHandler}
-    />
-  );
-
   return (
     <>
       <Stack direction="row" alignItems="center">
-        {activeList}
+        <WorldBankActiveCountryList />
         <DropdownMenu content={menu} />
       </Stack>
 

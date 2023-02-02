@@ -21,6 +21,8 @@ import {
   SearchTextInput,
 } from "@fengxia41103/storybook";
 
+import WorldBankIndicatorFilterKeywordList from "@Components/wb/WorldBankIndicatorFilterKeywordList";
+
 import {
   selectFilteredIndicators,
   toggleIndicatorFilterKeyword,
@@ -60,9 +62,6 @@ const WorldBankIndicatorList = () => {
   );
 
   const indicators = useSelector((state) => state.wb.indicators);
-  const indicatorFilterKeywords = useSelector(
-    (state) => state.wb.indicatorFilterKeywords,
-  );
 
   const filteredIndicators = useSelector((state) =>
     selectFilteredIndicators(state),
@@ -77,24 +76,10 @@ const WorldBankIndicatorList = () => {
     }
   };
 
-  const keywordClickHandler = (keyword) => {
-    dispatch(toggleIndicatorFilterKeyword(keyword));
-  };
-
-  const activeKeywordList = (
-    <ChipListWithClickToggle
-      fullList={indicatorFilterKeywords.map((keyword) => ({
-        id: keyword,
-        name: keyword,
-      }))}
-      activeList={indicatorFilterKeywords}
-      onClick={keywordClickHandler}
-    />
-  );
-
   return (
     <Box>
-      {activeKeywordList}
+      <WorldBankIndicatorFilterKeywordList />
+
       <SearchTextInput
         debounceTimeout={600}
         title="Filter by Country Name"
